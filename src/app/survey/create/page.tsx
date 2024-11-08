@@ -78,6 +78,13 @@ const CreateSurveyPage = () => {
     }
   };
 
+  // Handle adding a question
+  const handleAddQuestion = () => {
+    append({ question: '', answerType: 'text', options: [] });
+    const currentQuestions = watch('questions');
+    setValue('numQuestions', ((currentQuestions.length + 1) - 1).toString());  // Increment numQuestions
+  };
+
   const renderAnswerTypeOptions = (index: number, type: string) => {
     if (type === 'dropdown' || type === 'radio' || type === 'checkbox') {
       return (
@@ -194,7 +201,7 @@ const CreateSurveyPage = () => {
             {parseInt(numQuestions) > 0 && (  /* Conditional render based on numQuestions */
               <button
                 type="button"
-                onClick={() => append({ question: '', answerType: 'text', options: [] })}
+                onClick={handleAddQuestion}
                 className="w-full flex items-center justify-center gap-2 text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
               >
                 <FaPlus /> Add Question
@@ -213,20 +220,14 @@ const CreateSurveyPage = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg">
-            <h3 className="text-lg font-semibold text-black">Are you sure you want to reset all questions?</h3>
-            <div className="flex gap-4 mt-4">
-              <button
-                onClick={confirmReset}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-              >
+        <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p>Are you sure you want to reset the survey?</p>
+            <div className="mt-4 flex gap-4">
+              <button onClick={confirmReset} className="bg-green-600 text-white px-4 py-2 rounded-md">
                 Yes
               </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg"
-              >
+              <button onClick={() => setShowModal(false)} className="bg-red-600 text-white px-4 py-2 rounded-md">
                 No
               </button>
             </div>
