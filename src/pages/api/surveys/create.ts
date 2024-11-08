@@ -17,6 +17,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const decoded = jwt.verify(token, JWT_SECRET) as JwtPayloadWithUserId;
   if (!decoded || !decoded.userId) return res.status(401).json({ error: 'Invalid token' });
 
+  // Validate the question structure and answer types
+  const isValid = questions.every((question: any) => {
+    return (
+      question.question &&
+      ['text', 'dropdown', 'radio', 'checkbox'].includes(question.answerType) &&
+      (question.answerType !== 'text' ? Array.isArray(question.options) && question.options.length > 0 : true)
+    );
+  });
+
+  if (!isValid) {
+    return res.status(400).json({ error: 'Invalid question structure or missing options for answer types' });
+  }
+
   const survey = new Survey({ title, creatorId: decoded.userId, questions });
   await survey.save();
   res.status(201).json({ survey });
