@@ -13,6 +13,7 @@ interface Question {
 interface Survey {
   title: string;
   surveyId: string;
+  creatorId: string;
   questions: Question[];
 }
 
@@ -20,6 +21,7 @@ const SurveyFormPage: React.FC = () => {
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [responses, setResponses] = useState<Record<string, any>>({});
 
+  // Fetch survey data on component mount
   useEffect(() => {
     const fetchSurvey = async () => {
       const url = window.location.href;
@@ -29,6 +31,19 @@ const SurveyFormPage: React.FC = () => {
         try {
           const response = await axios.get(`/api/surveys/${surveyId}`);
           setSurvey(response.data.survey);
+
+          // Initialize the responses state
+          const initialResponses: Record<string, any> = {};
+          response.data.survey.questions.forEach((question: Question) => {
+            // Set default value for each question type
+            if (question.answerType === 'checkbox') {
+              initialResponses[question._id] = []; // Initialize as an empty array for checkboxes
+            } else {
+              initialResponses[question._id] = ''; // Initialize as an empty string for other types
+            }
+          });
+
+          setResponses(initialResponses);
         } catch (error) {
           console.error('Error fetching survey:', error);
         }
@@ -37,8 +52,6 @@ const SurveyFormPage: React.FC = () => {
 
     fetchSurvey();
   }, []);
-
-  if (!survey) return <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>;
 
   const handleResponseChange = (questionId: string, value: any) => {
     setResponses((prevResponses) => ({
@@ -52,28 +65,25 @@ const SurveyFormPage: React.FC = () => {
 
     try {
       // Prepare the data to send
-      const userResponses = survey.questions.map((question) => ({
+      const userResponses = survey?.questions.map((question) => ({
         questionId: question._id,
         answer: responses[question._id], // The response for each question
       }));
 
       console.log(userResponses);
-      
 
-      // Send the data to the API
-      // const response = await axios.post('/api/survey/submit', {
-      //   surveyId: survey.surveyId,
-      //   responses: userResponses,
-      // });
+      // Uncomment and configure the API call when you're ready to submit the form
+      const response = await axios.post('/api/surveys/submit', {
+        surveyId: survey?.surveyId,
+        userId: survey?.creatorId,
+        responses: userResponses,
+      });
 
-      // // Handle the response from the server
-      // if (response.status === 200) {
-      //   // You can add a success message or redirect to a new page
-      //   alert('Survey submitted successfully!');
-      //   // Optionally redirect to a thank you page or somewhere else
-      // } else {
-      //   alert('Something went wrong. Please try again.');
-      // }
+      if (response.status === 201) {
+        alert('Survey submitted successfully!');
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
     } catch (error) {
       console.error('Error submitting survey:', error);
       alert('Error submitting the survey. Please try again.');
@@ -93,7 +103,7 @@ const SurveyFormPage: React.FC = () => {
           />
         );
       case 'radio':
-        return question.options?.map((option: string) => ( // Explicitly typed `option`
+        return question.options?.map((option: string) => (
           <label key={option} className="flex items-center space-x-3 mt-3">
             <input
               type="radio"
@@ -107,7 +117,7 @@ const SurveyFormPage: React.FC = () => {
           </label>
         ));
       case 'checkbox':
-        return question.options?.map((option: string) => ( // Explicitly typed `option`
+        return question.options?.map((option) => (
           <label key={option} className="flex items-center space-x-3 mt-3">
             <input
               type="checkbox"
@@ -117,7 +127,7 @@ const SurveyFormPage: React.FC = () => {
               onChange={() => {
                 const newValue = responses[question._id] || [];
                 if (newValue.includes(option)) {
-                  handleResponseChange(question._id, newValue.filter((item: string) => item !== option)); // Explicitly typed `item`
+                  handleResponseChange(question._id, newValue.filter((item: string) => item !== option));
                 } else {
                   handleResponseChange(question._id, [...newValue, option]);
                 }
@@ -135,7 +145,7 @@ const SurveyFormPage: React.FC = () => {
             onChange={(e) => handleResponseChange(question._id, e.target.value)}
           >
             <option value="">Select an option</option>
-            {question.options?.map((option: string) => ( // Explicitly typed `option`
+            {question.options?.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
@@ -146,7 +156,8 @@ const SurveyFormPage: React.FC = () => {
         return null;
     }
   };
-  
+
+  if (!survey) return <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-6">
