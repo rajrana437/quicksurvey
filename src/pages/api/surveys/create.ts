@@ -18,11 +18,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Validate the question structure and answer types
   const isValid = questions.every((question: any) => {
-    return (
-      question.question &&
-      ['text', 'dropdown', 'radio', 'checkbox'].includes(question.answerType) &&
-      (question.answerType !== 'text' ? Array.isArray(question.options) && question.options.length > 0 : true)
-    );
+    // Check if question is valid
+    const hasValidAnswerType = ['text', 'dropdown', 'radio', 'checkbox'].includes(question.answerType);
+    
+    // If answer type is not 'text', ensure options are present and properly formatted
+    if (question.answerType !== 'text') {
+      if (typeof question.options === 'string') {
+        question.options = question.options.split(',').map((option: string) => option.trim());
+      }
+
+      return (
+        question.question &&
+        hasValidAnswerType &&
+        Array.isArray(question.options) && question.options.length > 0
+      );
+    }
+
+    // If answer type is 'text', ensure question is valid
+    return question.question && hasValidAnswerType;
   });
 
   if (!isValid) {
@@ -33,7 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await survey.save();
 
   // Generate the survey link using the saved survey ID
-  const surveyLink = `${process.env.HOST_URL}/surveys/${survey.surveyId}`;
+  const surveyLink = `${process.env.HOST_URL}/survey/${survey.surveyId}`;
 
   res.status(201).json({ survey, link: surveyLink });
 };
