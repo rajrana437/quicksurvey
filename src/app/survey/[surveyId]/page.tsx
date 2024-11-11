@@ -45,13 +45,13 @@ const SurveyFormPage: React.FC = () => {
         return (
           <input
             type="text"
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white dark:focus:ring-primary-600"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white dark:focus:ring-primary-600"
             placeholder="Your answer"
           />
         );
       case 'radio':
         return question.options?.map((option) => (
-          <label key={option} className="flex items-center mt-3 space-x-2">
+          <label key={option} className="flex items-center space-x-3 mt-3">
             <input
               type="radio"
               name={question._id}
@@ -63,7 +63,7 @@ const SurveyFormPage: React.FC = () => {
         ));
       case 'checkbox':
         return question.options?.map((option) => (
-          <label key={option} className="flex items-center mt-3 space-x-2">
+          <label key={option} className="flex items-center space-x-3 mt-3">
             <input
               type="checkbox"
               name={question._id}
@@ -76,7 +76,7 @@ const SurveyFormPage: React.FC = () => {
       case 'dropdown':
         return (
           <select
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white dark:focus:ring-primary-600"
+            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white dark:focus:ring-primary-600"
           >
             {question.options?.map((option) => (
               <option key={option} value={option}>
@@ -93,18 +93,21 @@ const SurveyFormPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-6">
       <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 space-y-6">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-white text-center">{survey.title}</h1>
+        <h1 className="text-3xl font-semibold text-gray-800 dark:text-white text-center">{survey.title}</h1>
         <form>
-          {survey.questions.map((question) => (
+          {survey.questions.map((question, index) => (
             <div key={question._id} className="mb-6">
-              <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">{question.question}</label>
+              <div className="flex items-center space-x-4">
+                <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">{index + 1}.</span>
+                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">{question.question}</label>
+              </div>
               {renderInputField(question)}
             </div>
           ))}
           <div className="text-center mt-6">
             <button
               type="submit"
-              className="w-full bg-primary-600 text-white py-2 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             >
               Submit
             </button>
