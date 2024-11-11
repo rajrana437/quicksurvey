@@ -5,6 +5,8 @@ import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { FaTrash, FaPlus, FaClipboard } from 'react-icons/fa';
 import './styles.css';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+
 
 interface SurveyForm {
   title: string;
@@ -35,21 +37,24 @@ const CreateSurveyPage = () => {
 
   const onSubmit = async (data: SurveyForm) => {
     const token = localStorage.getItem('token');
-
+  
     if (!token) {
       console.error('Missing auth token. Please log in to create a survey.');
       return;
     }
-
-    console.log(data);
-
+  
+    const uniqueSurveyId = uuidv4(); // Generate a unique ID using uuid
+    const surveyData = { ...data, surveyId: uniqueSurveyId }; // Add surveyId to data
+  
+    console.log(surveyData);
+  
     try {
-      const response = await axios.post('/api/surveys/create', data, {
+      const response = await axios.post('/api/surveys/create', surveyData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       console.log('Survey created successfully:', response.data);
       if (response.data.link) {
         setLinkShowModal(true);

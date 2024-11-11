@@ -12,6 +12,7 @@ interface IQuestion {
 
 export interface ISurvey extends Document {
   title: string;
+  surveyId: string;
   creatorId: string;
   questions: IQuestion[];
 }
@@ -19,6 +20,7 @@ export interface ISurvey extends Document {
 const SurveySchema: Schema = new Schema({
   title: { type: String, required: true },
   creatorId: { type: String, required: true },
+  surveyId: { type: String, required: true },
   questions: [
     {
       question: { type: String, required: true },

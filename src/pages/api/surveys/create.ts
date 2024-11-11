@@ -8,7 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await connectDB();
 
-  const { title, questions } = req.body;
+  const { title, questions, surveyId } = req.body; 
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'No token provided' });
 
@@ -29,11 +29,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: 'Invalid question structure or missing options for answer types' });
   }
 
-  const survey = new Survey({ title, creatorId: decoded.userId, questions });
+  const survey = new Survey({ title, creatorId: decoded.userId, questions, surveyId });
   await survey.save();
 
   // Generate the survey link using the saved survey ID
-  const surveyLink = `${process.env.HOST_URL}/surveys/${survey._id}`;
+  const surveyLink = `${process.env.HOST_URL}/surveys/${survey.surveyId}`;
 
   res.status(201).json({ survey, link: surveyLink });
 };
