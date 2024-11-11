@@ -20,6 +20,8 @@ interface Survey {
 const SurveyFormPage: React.FC = () => {
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [responses, setResponses] = useState<Record<string, any>>({});
+  const [initialResponses, setInitialResponses] = useState<Record<string, any>>({}); // Store initial responses
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // Track submission status
 
   // Fetch survey data on component mount
   useEffect(() => {
@@ -44,6 +46,8 @@ const SurveyFormPage: React.FC = () => {
           });
 
           setResponses(initialResponses);
+          setInitialResponses(initialResponses); // Store initial state
+
         } catch (error) {
           console.error('Error fetching survey:', error);
         }
@@ -81,6 +85,12 @@ const SurveyFormPage: React.FC = () => {
 
       if (response.status === 201) {
         alert('Survey submitted successfully!');
+        
+        // Reset the responses after submission
+        setResponses(initialResponses); // Reset responses to initial state
+
+        // Set the form as submitted
+        setIsSubmitted(true);
       } else {
         alert('Something went wrong. Please try again.');
       }
@@ -103,7 +113,7 @@ const SurveyFormPage: React.FC = () => {
           />
         );
       case 'radio':
-        return question.options?.map((option: string) => (
+        return question.options?.map((option) => (
           <label key={option} className="flex items-center space-x-3 mt-3">
             <input
               type="radio"
@@ -162,26 +172,34 @@ const SurveyFormPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-6">
       <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 space-y-6">
-        <h1 className="text-3xl font-semibold text-gray-800 dark:text-white text-center">{survey.title}</h1>
-        <form onSubmit={handleSubmit}>
-          {survey.questions.map((question, index) => (
-            <div key={question._id} className="mb-6">
-              <div className="flex items-center space-x-4">
-                <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">{index + 1}.</span>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">{question.question}</label>
-              </div>
-              {renderInputField(question)}
-            </div>
-          ))}
-          <div className="text-center mt-6">
-            <button
-              type="submit"
-              className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-            >
-              Submit
-            </button>
+        {isSubmitted ? (
+          <div className="text-center">
+            <h1 className="text-3xl font-semibold text-gray-800 dark:text-white">Thank you for your response!</h1>
           </div>
-        </form>
+        ) : (
+          <>
+            <h1 className="text-3xl font-semibold text-gray-800 dark:text-white text-center">{survey.title}</h1>
+            <form onSubmit={handleSubmit}>
+              {survey.questions.map((question, index) => (
+                <div key={question._id} className="mb-6">
+                  <div className="flex items-center space-x-4">
+                    <span className="text-lg font-semibold text-gray-700 dark:text-gray-300">{index + 1}.</span>
+                    <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">{question.question}</label>
+                  </div>
+                  {renderInputField(question)}
+                </div>
+              ))}
+              <div className="text-center mt-6">
+                <button
+                  type="submit"
+                  className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
