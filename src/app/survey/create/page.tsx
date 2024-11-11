@@ -30,6 +30,8 @@ const CreateSurveyPage = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [surveyLink, setSurveyLink] = useState<string>('');
+  const [linkShowModal, setLinkShowModal] = useState<boolean>(false);
+
 
   const onSubmit = async (data: SurveyForm) => {
     const token = localStorage.getItem('token');
@@ -49,7 +51,10 @@ const CreateSurveyPage = () => {
       });
 
       console.log('Survey created successfully:', response.data);
-      setSurveyLink(response.data.link); // Set the survey link from the response
+      if (response.data.link) {
+        setLinkShowModal(true);
+        setSurveyLink(response.data.link); // Set the survey link from the response
+      }
     } catch (error) {
       console.error('Error creating survey:', error);
     }
@@ -251,6 +256,7 @@ const CreateSurveyPage = () => {
                 </div>
               ))}
             </div>
+            {parseInt(numQuestions) > 0 && (  /* Conditional render based on numQuestions */
 
             <button
               type="button"
@@ -259,7 +265,7 @@ const CreateSurveyPage = () => {
             >
               <FaPlus className="mr-1" /> Add Question
             </button>
-
+   )}
             {/* Submit Button */}
             <button
               type="submit"
@@ -291,6 +297,40 @@ const CreateSurveyPage = () => {
                 </div>
               </div>
             )}
+
+{surveyLink && linkShowModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+      <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">Your survey link is ready!</p>
+      <div className="flex items-center">
+        <input
+          type="text"
+          value={surveyLink}
+          readOnly
+          className="bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        />
+        <div className="relative group">
+          <button
+            onClick={() => navigator.clipboard.writeText(surveyLink)}
+            className="ml-2 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+          >
+            <FaClipboard />
+          </button>
+          <div className="hidden absolute top-full left-1/2 -translate-x-1/2 bg-gray-800 text-white p-2 rounded-md shadow-md group-hover:block">
+            Copy
+          </div>
+        </div>
+      </div>
+      <button
+        onClick={() => {setLinkShowModal(false), confirmReset()}}
+        className="mt-4 px-4 py-2 text-gray-700 border rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 focus:outline-none"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
     </section>
   );
 };

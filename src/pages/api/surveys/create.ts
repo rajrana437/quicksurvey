@@ -1,4 +1,3 @@
-// src/pages/api/surveys/create.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Survey } from '@/models/Survey';
 import connectDB from '@/lib/db';
@@ -32,7 +31,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const survey = new Survey({ title, creatorId: decoded.userId, questions });
   await survey.save();
-  res.status(201).json({ survey });
+
+  // Generate the survey link using the saved survey ID
+  const surveyLink = `${process.env.HOST_URL}/surveys/${survey._id}`;
+
+  res.status(201).json({ survey, link: surveyLink });
 };
 
 interface JwtPayloadWithUserId extends jwt.JwtPayload {
