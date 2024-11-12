@@ -37,24 +37,24 @@ const CreateSurveyPage = () => {
 
   const onSubmit = async (data: SurveyForm) => {
     const token = localStorage.getItem('token');
-  
+
     if (!token) {
       console.error('Missing auth token. Please log in to create a survey.');
       return;
     }
-  
+
     const uniqueSurveyId = uuidv4(); // Generate a unique ID using uuid
     const surveyData = { ...data, surveyId: uniqueSurveyId }; // Add surveyId to data
-  
+
     console.log(surveyData);
-  
+
     try {
       const response = await axios.post('/api/surveys/create', surveyData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       console.log('Survey created successfully:', response.data);
       if (response.data.link) {
         setLinkShowModal(true);
@@ -263,14 +263,14 @@ const CreateSurveyPage = () => {
             </div>
             {parseInt(numQuestions) > 0 && (  /* Conditional render based on numQuestions */
 
-            <button
-              type="button"
-              onClick={handleAddQuestion}
-              className="flex items-center text-blue-500 font-medium"
-            >
-              <FaPlus className="mr-1" /> Add Question
-            </button>
-   )}
+              <button
+                type="button"
+                onClick={handleAddQuestion}
+                className="flex items-center text-blue-500 font-medium"
+              >
+                <FaPlus className="mr-1" /> Add Question
+              </button>
+            )}
             {/* Submit Button */}
             <button
               type="submit"
@@ -284,57 +284,57 @@ const CreateSurveyPage = () => {
       </div>
       {/* Modal for reset confirmation */}
       {showModal && (
-              <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-                <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-                  <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">Are you sure you want to reset all questions?</p>
-                  <button
-                    onClick={confirmReset}
-                    className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none"
-                  >
-                    Confirm Reset
-                  </button>
-                  <button
-                    onClick={() => setShowModal(false)}
-                    className="px-4 py-2 ml-2 text-gray-700 border rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 focus:outline-none"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            )}
-
-{surveyLink && linkShowModal && (
-  <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-    <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-      <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">Your survey link is ready!</p>
-      <div className="flex items-center">
-        <input
-          type="text"
-          value={surveyLink}
-          readOnly
-          className="bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        />
-        <div className="relative group">
-          <button
-            onClick={() => navigator.clipboard.writeText(surveyLink)}
-            className="ml-2 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-          >
-            <FaClipboard />
-          </button>
-          <div className="hidden absolute top-full left-1/2 -translate-x-1/2 bg-gray-800 text-white p-2 rounded-md shadow-md group-hover:block">
-            Copy
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+            <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">Are you sure you want to reset all questions?</p>
+            <button
+              onClick={confirmReset}
+              className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none"
+            >
+              Confirm Reset
+            </button>
+            <button
+              onClick={() => setShowModal(false)}
+              className="px-4 py-2 ml-2 text-gray-700 border rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 focus:outline-none"
+            >
+              Cancel
+            </button>
           </div>
         </div>
-      </div>
-      <button
-        onClick={() => {setLinkShowModal(false), confirmReset()}}
-        className="mt-4 px-4 py-2 text-gray-700 border rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 focus:outline-none"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
+      )}
+
+      {surveyLink && linkShowModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+            <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">Your survey link is ready!</p>
+            <div className="flex items-center">
+              <input
+                type="text"
+                value={surveyLink}
+                readOnly
+                className="bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              />
+              <div className="relative group">
+                <button
+                  onClick={() => navigator.clipboard.writeText(surveyLink)}
+                  className="ml-2 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                >
+                  <FaClipboard />
+                </button>
+                <div className="hidden absolute top-full left-1/2 -translate-x-1/2 bg-gray-800 text-white p-2 rounded-md shadow-md group-hover:block">
+                  Copy
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => { setLinkShowModal(false), confirmReset() }}
+              className="mt-4 px-4 py-2 text-gray-700 border rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 focus:outline-none"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
     </section>
   );
