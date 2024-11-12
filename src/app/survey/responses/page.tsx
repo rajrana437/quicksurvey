@@ -1,6 +1,7 @@
 // pages/survey-responses.tsx
 'use client'
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { utils, writeFile } from 'xlsx';
 
@@ -18,6 +19,7 @@ interface SurveyResponse {
 const SurveyResponsesPage = () => {
   const [surveyResponses, setSurveyResponses] = useState<SurveyResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchSurveyResponses = async () => {
@@ -62,7 +64,15 @@ const SurveyResponsesPage = () => {
 
   return (
     <div className="p-6 bg-white dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white">
-      <h1 className="text-2xl font-semibold mb-4">Survey Responses</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-semibold">Survey Responses</h1>
+        <button
+          onClick={() => router.push('/create-survey')}
+          className="px-6 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition"
+        >
+          Create Survey
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300 dark:border-gray-700">
           <thead>
