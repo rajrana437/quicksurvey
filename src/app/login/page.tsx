@@ -23,7 +23,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (data.token) {
         localStorage.setItem('token', data.token);
-        window.location.href = '/survey/responses';
+        window.location.href = '/survey/dashboard';
       } else {
         setError('Invalid credentials');
       }

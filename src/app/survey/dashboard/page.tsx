@@ -29,11 +29,10 @@ const SurveyResponsesPage = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        // setSurveyResponses(response.data.responses);
-        setSurveyResponses([]);
+        setSurveyResponses(response.data.responses);
 
       } catch (error) {
-        console.error('Error fetching survey responses:', error);
+        console.error('Error fetching dashboard:', error);
       } finally {
         setLoading(false);
       }
@@ -65,14 +64,14 @@ const SurveyResponsesPage = () => {
     writeFile(workbook, `${sheetName}_Responses.xlsx`);
   };
 
-  if (loading) return <p className="text-center text-gray-500 dark:text-gray-400">Loading survey responses...</p>;
+  if (loading) return <p className="text-center text-gray-500 dark:text-gray-400">Loading dashboard...</p>;
 
   return (
     <div className="p-6 bg-white dark:bg-gray-900 min-h-screen text-gray-900 dark:text-white">
 
       {surveyResponses.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-screen">
-          <p className="text-lg mb-4">No survey responses available.</p>
+          <p className="text-lg mb-4">No dashboard available.</p>
 
           <div className="flex gap-4">
             <button
@@ -93,7 +92,7 @@ const SurveyResponsesPage = () => {
       ) : (
         <>
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-semibold">Survey Responses</h1>
+            <h1 className="text-2xl font-semibold">Dashboard</h1>
             <div>
               <button
                 onClick={() => router.push('/survey/create')}

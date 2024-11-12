@@ -11,7 +11,7 @@ export default function Home() {
 
     if (token) {
       // Redirect to survey response page if logged in
-      router.push('/survey/responses');
+      router.push('/survey/dashboard');
     } else {
       // Redirect to login page if not logged in
       router.push('/login');

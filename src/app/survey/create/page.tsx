@@ -281,7 +281,7 @@ const CreateSurveyPage = () => {
             </button>
 
             <div className="flex justify-center mt-6">
-              <Link href="/survey/responses" legacyBehavior>
+              <Link href="/survey/dashboard" legacyBehavior>
                 <a className="flex items-center justify-center text-blue-500 hover:text-blue-700 font-medium text-lg">
                   <FaArrowLeft className="mr-2" /> {/* Back Icon */}
                   Go Back to Dashboard
