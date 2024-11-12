@@ -19,8 +19,8 @@ interface Survey {
 
 const SurveyFormPage: React.FC = () => {
   const [survey, setSurvey] = useState<Survey | null>(null);
-  const [responses, setResponses] = useState<Record<string, any>>({});
-  const [initialResponses, setInitialResponses] = useState<Record<string, any>>({}); // Store initial responses
+  const [responses, setResponses] = useState<Record<string, string | string[]>>({});
+  const [initialResponses, setInitialResponses] = useState<Record<string, string | string[]>>({}); // Store initial responses
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // Track submission status
 
   // Fetch survey data on component mount
@@ -35,7 +35,7 @@ const SurveyFormPage: React.FC = () => {
           setSurvey(response.data.survey);
 
           // Initialize the responses state
-          const initialResponses: Record<string, any> = {};
+          const initialResponses: Record<string, string | string[]> = {};
           response.data.survey.questions.forEach((question: Question) => {
             // Set default value for each question type
             if (question.answerType === 'checkbox') {
@@ -57,7 +57,7 @@ const SurveyFormPage: React.FC = () => {
     fetchSurvey();
   }, []);
 
-  const handleResponseChange = (questionId: string, value: any) => {
+  const handleResponseChange = (questionId: string, value: string | string[]) => {
     setResponses((prevResponses) => ({
       ...prevResponses,
       [questionId]: value,
@@ -136,12 +136,15 @@ const SurveyFormPage: React.FC = () => {
               checked={responses[question._id]?.includes(option)}
               onChange={() => {
                 const newValue = responses[question._id] || [];
-                if (newValue.includes(option)) {
-                  handleResponseChange(question._id, newValue.filter((item: string) => item !== option));
-                } else {
-                  handleResponseChange(question._id, [...newValue, option]);
+                if (Array.isArray(newValue)) {
+                  if (newValue.includes(option)) {
+                    handleResponseChange(question._id, newValue.filter((item: string) => item !== option));
+                  } else {
+                    handleResponseChange(question._id, [...newValue, option]);
+                  }
                 }
               }}
+              
               className="form-checkbox text-primary-600 focus:ring-primary-500 dark:text-primary-400 dark:focus:ring-primary-600"
             />
             <span className="text-gray-700 dark:text-gray-300">{option}</span>

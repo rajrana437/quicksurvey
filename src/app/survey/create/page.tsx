@@ -15,7 +15,7 @@ interface SurveyForm {
 }
 
 const CreateSurveyPage = () => {
-  const { control, handleSubmit, watch, setValue, reset, getValues, formState: { errors } } = useForm<SurveyForm>({
+  const { control, handleSubmit, watch, setValue, reset, getValues, formState: { errors: _errors } } = useForm<SurveyForm>({
     defaultValues: {
       title: '',
       numQuestions: '',
