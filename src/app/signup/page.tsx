@@ -6,18 +6,60 @@ export default function SignUpPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({}); // Track validation errors
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    // Validation logic
+    const newErrors: { [key: string]: string } = {};
+
+    // Username validation (not empty, min length)
+    if (!username) {
+      newErrors.username = "Username is required";
+    } else if (username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters long";
+    }
+
+    // Email validation (valid email format)
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email) {
+      newErrors.email = "Email is required";
+    } else if (!emailRegex.test(email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Password validation (min length, at least one number, and one special character)
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters long";
+    } else if (!/\d/.test(password)) {
+      newErrors.password = "Password must contain at least one number";
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      newErrors.password = "Password must contain at least one special character";
+    }
+
+    // If there are validation errors, set them in the state
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // If no errors, proceed with the signup API request
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),
     });
     const data = await res.json();
+
     if (data.token) {
       localStorage.setItem("token", data.token);
       window.location.href = "/survey/create"; // Redirect after successful signup
+    } else {
+      // Handle any error response (optional)
+      setErrors({ api: data.error || "Something went wrong. Please try again." });
     }
   };
 
@@ -49,6 +91,7 @@ export default function SignUpPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
                 required
+                error={errors.username}
               />
               <FormField
                 label="Email"
@@ -58,6 +101,7 @@ export default function SignUpPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
                 required
+                error={errors.email}
               />
               <FormField
                 label="Password"
@@ -67,7 +111,9 @@ export default function SignUpPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
+                error={errors.password}
               />
+              {errors.api && <p className="text-red-500 text-sm">{errors.api}</p>}
               <div className="flex items-center justify-between">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">

@@ -8,6 +8,8 @@ interface SurveyResponse {
   _id: string;
   surveyId: string;
   userId: string;
+  surveyTitle: string;
+  username: string;
   responses: {
     questionId: string;
     answer: string | string[];
@@ -23,7 +25,7 @@ const SurveyResponsesPage = () => {
   useEffect(() => {
     const fetchSurveyResponses = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token');        
         const response = await axios.get('/api/surveys/responses', {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -113,8 +115,8 @@ const SurveyResponsesPage = () => {
             <table className="w-full border-collapse border border-gray-300 dark:border-gray-700">
               <thead>
                 <tr className="bg-gray-100 dark:bg-gray-800 text-left">
-                  <th className="border border-gray-300 dark:border-gray-700 px-4 py-2">Survey ID</th>
-                  <th className="border border-gray-300 dark:border-gray-700 px-4 py-2">User ID</th>
+                  <th className="border border-gray-300 dark:border-gray-700 px-4 py-2">Survey Title</th>
+                  <th className="border border-gray-300 dark:border-gray-700 px-4 py-2">Username</th>
                   <th className="border border-gray-300 dark:border-gray-700 px-4 py-2">Responses</th>
                   <th className="border border-gray-300 dark:border-gray-700 px-4 py-2">Submitted On</th>
                   <th className="border border-gray-300 dark:border-gray-700 px-4 py-2">Download</th>
@@ -123,8 +125,8 @@ const SurveyResponsesPage = () => {
               <tbody>
                 {surveyResponses.map((response) => (
                   <tr key={response._id} className="even:bg-gray-50 dark:even:bg-gray-800">
-                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{response.surveyId}</td>
-                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{response.userId}</td>
+                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{response.surveyTitle}</td>
+                    <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">{response.username}</td>
                     <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
                       <ul className="list-disc pl-4">
                         {response.responses.map((r, index) => (

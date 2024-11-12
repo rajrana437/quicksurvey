@@ -3,6 +3,7 @@ import { UserResponse } from '@/models/UserResponse';
 import { Survey } from '@/models/Survey';
 import connectDB from '@/lib/db';
 import jwt from 'jsonwebtoken';
+import User from '@/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
 
@@ -32,8 +33,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // Fetch all user responses for the surveys created by this user
     const userResponses = await UserResponse.find({ surveyId: { $in: surveyIds } });
 
-    // Return the user responses
-    res.status(200).json({ responses: userResponses });
+    // For each response, get the survey title and the username of the person who submitted the response
+    const enrichedResponses = await Promise.all(userResponses.map(async (response) => {
+      const survey = surveys.find(survey => survey.surveyId === response.surveyId);
+      const user = await User.findById(response.userId);  // Assuming 'userId' is present in the UserResponse
+
+      return {
+        ...response.toObject(),
+        surveyTitle: survey ? survey.title : 'Unknown Survey',
+        username: user ? user.username : 'Unknown User',
+      };
+    }));
+
+    // Return the enriched user responses
+    res.status(200).json({ responses: enrichedResponses });
   } catch (error) {
     console.error('Error fetching user responses:', error);
     res.status(500).json({ error: 'Internal server error' });
