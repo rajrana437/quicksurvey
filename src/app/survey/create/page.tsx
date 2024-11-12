@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import { FaTrash, FaPlus, FaClipboard } from 'react-icons/fa';
+import { FaTrash, FaPlus, FaClipboard, FaArrowLeft } from 'react-icons/fa';  // Added FaArrowLeft for the back icon
 import './styles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-
+import Link from 'next/link';
 
 interface SurveyForm {
   title: string;
@@ -279,9 +279,23 @@ const CreateSurveyPage = () => {
             >
               Create Survey
             </button>
+
+            <div className="flex justify-center mt-6">
+              <Link href="/survey/responses" legacyBehavior>
+                <a className="flex items-center justify-center text-blue-500 hover:text-blue-700 font-medium text-lg">
+                  <FaArrowLeft className="mr-2" /> {/* Back Icon */}
+                  Go Back to Dashboard
+                </a>
+              </Link>
+            </div>
           </div>
+
         </div>
       </div>
+
+
+
+
       {/* Modal for reset confirmation */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
