@@ -1,6 +1,6 @@
 import mongoose, { ConnectOptions } from 'mongoose';
 
-const MONGODB_URI: string = process.env.MONGODB_URI || 'mongodb://localhost:27017/quickSurvey';
+const MONGODB_URI: string = 'mongodb://localhost:27017/quickSurvey';
 
 console.log(MONGODB_URI);
 
