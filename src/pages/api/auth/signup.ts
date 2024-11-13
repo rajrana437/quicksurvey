@@ -1,84 +1,55 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import User from "../../../models/User";
+import { NextApiRequest, NextApiResponse } from 'next';
+import User from '@/models/User';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import connectDB from '@/lib/db';
 
-const connectToDatabase = async () => {
-  if (mongoose.connections[0].readyState) {
-    return;
-  }
+const JWT_SECRET: string = "your_secret_key";
 
-  await mongoose.connect(process.env.MONGODB_URI!, {});
-};
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is not set');
+}
 
+// Define the handler function
 const signupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
-  }
-
-  const { username, email, password } = req.body;
-
-  // Validate the input
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-
   try {
-    // Connect to the database
-    await connectToDatabase();
+    console.log("Connecting to database...");
+    await connectDB();
+    console.log("Database connected");
 
-    // Check if the user already exists (by username or email)
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    const { username, email, password } = req.body;
+
+    // Check if all required fields are provided
+    if (!username || !email || !password) {
+      console.log("Missing required fields");
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    console.log("Checking for existing user...");
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(400).json({
-        message: existingUser.username === username
-          ? "Username already exists"
-          : "Email already exists",
-      });
+      console.log("User with this email or username already exists");
+      return res.status(400).json({ error: 'User with this email or username already exists' });
     }
 
-    // Hash the password
+    console.log("Hashing password...");
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Password hashed");
 
-    console.log(username, email, hashedPassword);
-    
-
-    // Create a new user
-    const newUser = new User({
-      username,
-      email: email,
-      password: hashedPassword,
-    });
-
+    console.log("Creating new user...");
+    const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
+    console.log("User created");
 
-    console.log(newUser);
-    
+    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: '1h' });
+    console.log("Token generated");
 
-    // Create a JWT token
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET!, {
-      expiresIn: "1d",
-    });
-
-    // Respond with the token and user details (excluding password)
-    res.status(201).json({
-      token,
-      user: { username: newUser.username, email: newUser.email },
-    });
-  } catch (error: any) {
-    console.error("Error creating user:", error);
-
-    // Handling the duplicate key error specifically
-    if (error.code === 11000) {
-      const duplicateField = Object.keys(error.keyPattern)[0];
-      const errorMessage = duplicateField === "email" ? "Email already exists" : "Username already exists";
-      return res.status(400).json({ message: errorMessage });
-    }
-
-    // General error response
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(201).json({ token });
+  } catch (error) {
+    console.error("Error in signup handler:", error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
 
+// Export the handler function as default
 export default signupHandler;
