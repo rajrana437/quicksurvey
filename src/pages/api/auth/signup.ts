@@ -13,9 +13,13 @@ if (!JWT_SECRET) {
 // Define the handler function
 const signupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    console.time('myTimer');
     console.log("Connecting to database...");
     await connectDB();
     console.log("Database connected");
+
+
+console.timeEnd('myTimer');
 
     const { username, email, password } = req.body;
 
