@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/lib/db';
 
-const JWT_SECRET: string = process.env.JWT_SECRET || '';
+const JWT_SECRET: string = "your_secret_key";
 
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is not set');

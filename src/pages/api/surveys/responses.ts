@@ -5,7 +5,7 @@ import connectDB from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import User from '@/models/User';
 
-const JWT_SECRET = process.env.JWT_SECRET || "your_secret_key";
+const JWT_SECRET = "your_secret_key";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'GET') {
