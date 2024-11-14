@@ -22,26 +22,40 @@ const SurveyResponsesPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
+
   useEffect(() => {
-    const fetchSurveyResponses = async () => {
+    const verifyTokenAndFetchResponses = async () => {
+      const token = localStorage.getItem('token');
+
+      console.log(token);
+      
+
+      if (!token) {
+        // Redirect to login if token is missing
+        router.push('/login');
+        return;
+      }
+
       try {
-        const token = localStorage.getItem('token');        
+        // Attempt to fetch data with token
         const response = await axios.get('/api/surveys/responses', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         setSurveyResponses(response.data.responses);
-
       } catch (error) {
-        console.error('Error fetching dashboard:', error);
+        console.error('Error fetching survey responses:', error);
+        // Redirect to login on fetch error, which may indicate an invalid token
+        router.push('/login');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSurveyResponses();
-  }, []);
+    verifyTokenAndFetchResponses();
+  }, [router]);
+
 
   const handleLogout = () => {
     localStorage.removeItem('token'); // Clear the token

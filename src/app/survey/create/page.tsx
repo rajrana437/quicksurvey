@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { FaTrash, FaPlus, FaClipboard, FaArrowLeft } from 'react-icons/fa';  // Added FaArrowLeft for the back icon
 import './styles.css';
@@ -23,6 +23,37 @@ const CreateSurveyPage = () => {
     },
   });
 
+  useEffect(() => {
+
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      try {
+        // Decode the token payload (split by '.' and take the second part)
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // Check if `exp` exists and is a valid timestamp
+        if (payload.exp && Date.now() >= payload.exp * 1000) {
+          console.log('Token is expired');
+          // Redirect to login
+          window.location.href = '/login';
+        } else {
+          console.log('Token is valid');
+        }
+      } catch (e) {
+        console.error('Error decoding token:', e);
+        // Redirect to login in case of an invalid token format
+        window.location.href = '/login';
+      }
+    } else {
+      console.log('No token found');
+      // Redirect to login if token is missing
+      window.location.href = '/login';
+    }
+    
+  }, [])
+  
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'questions',
@@ -36,25 +67,55 @@ const CreateSurveyPage = () => {
 
 
   const onSubmit = async (data: SurveyForm) => {
+    // Basic validation checks
+    const { title, numQuestions, questions } = data;
+  
+    // Check if title is provided
+    if (!title.trim()) {
+      alert("Please enter a survey title.");
+      return;
+    }
+  
+    // Check if numQuestions is a valid number and greater than 0
+    if (!numQuestions || isNaN(parseInt(numQuestions)) || parseInt(numQuestions) <= 0) {
+      alert("Please enter a valid number of questions.");
+      return;
+    }
+  
+    // Check if questions are filled correctly
+    for (let i = 0; i < questions.length; i++) {
+      const question = questions[i];
+      if (!question.question.trim()) {
+        alert(`Question ${i + 1} is missing a question text.`);
+        return;
+      }
+      // Check options for answer types that require options
+      if (
+        (question.answerType === 'radio' || question.answerType === 'checkbox' || question.answerType === 'dropdown') &&
+        (!question.options || question.options.length === 0 || question.options.every(opt => !opt.trim()))
+      ) {
+        alert(`Please provide options for Question ${i + 1}.`);
+        return;
+      }
+    }
+  
+    // If all checks pass, proceed with the API call
     const token = localStorage.getItem('token');
-
     if (!token) {
       console.error('Missing auth token. Please log in to create a survey.');
       return;
     }
-
+  
     const uniqueSurveyId = uuidv4(); // Generate a unique ID using uuid
     const surveyData = { ...data, surveyId: uniqueSurveyId }; // Add surveyId to data
-
-    console.log(surveyData);
-
+  
     try {
       const response = await axios.post('/api/surveys/create', surveyData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       console.log('Survey created successfully:', response.data);
       if (response.data.link) {
         setLinkShowModal(true);
@@ -64,6 +125,7 @@ const CreateSurveyPage = () => {
       console.error('Error creating survey:', error);
     }
   };
+  
 
   const numQuestions = watch('numQuestions');
 
