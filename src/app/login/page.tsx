@@ -6,7 +6,6 @@ import Image from 'next/image';
 export default function LoginPage() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +36,7 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
+    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a href="#" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <Image className="w-8 h-8 mr-2" src="/logo.png" alt="logo" width={100} height={100} />
