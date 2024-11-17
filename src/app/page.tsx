@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-
+  
     if (token) {
       // Redirect to survey response page if logged in
       router.push('/survey/dashboard');
