@@ -1,6 +1,7 @@
-"use client";
+'use client';
 import { FormEvent, useState } from "react";
-import FormField from "../components/FormField";
+import { usePathname } from "next/navigation";
+import FormField from "../../components/FormField";
 import Image from "next/image";
 
 export default function SignUpPage() {
@@ -8,6 +9,10 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({}); // Track validation errors
+
+  // Get the current locale from the pathname (assumes it's the first part of the path like '/en', '/fr')
+  const pathname = usePathname();
+  const locale = pathname ? pathname.split('/')[1] : 'en'; // Default to 'en' if pathname is null or not found
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -57,7 +62,7 @@ export default function SignUpPage() {
 
     if (data.token) {
       localStorage.setItem("token", data.token);
-      window.location.href = "/survey/create"; // Redirect after successful signup
+      window.location.href = `/${locale}/survey/create`; // Redirect after successful signup with locale
     } else {
       // Handle any error response (optional)
       setErrors({ api: data.error || "Something went wrong. Please try again." });
@@ -68,11 +73,10 @@ export default function SignUpPage() {
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
-          href="#"
+          href={`/${locale}`}  // Locale added to the logo link
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
           <Image className="w-8 h-8 mr-2" src="/logo.png" alt="logo" width={100} height={100} />
-
           Quick Survey
         </a>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -138,7 +142,7 @@ export default function SignUpPage() {
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
                 <a
-                  href="/login"
+                  href={`/${locale}/login`}  // Locale added to the login link
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Sign in

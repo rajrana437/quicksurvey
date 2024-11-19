@@ -7,6 +7,8 @@ import './styles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 
 interface SurveyForm {
   title: string;
@@ -15,6 +17,10 @@ interface SurveyForm {
 }
 
 const CreateSurveyPage = () => {
+
+  const pathname = usePathname();
+  const locale = pathname ? pathname.split('/')[1] : 'en'; // Get locale from pathname
+  
   const { control, handleSubmit, watch, setValue, reset, getValues, formState: { errors: _errors } } = useForm<SurveyForm>({
     defaultValues: {
       title: '',
@@ -24,7 +30,6 @@ const CreateSurveyPage = () => {
   });
 
   useEffect(() => {
-
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -36,22 +41,22 @@ const CreateSurveyPage = () => {
         if (payload.exp && Date.now() >= payload.exp * 1000) {
           console.log('Token is expired');
           // Redirect to login
-          window.location.href = '/login';
+          window.location.href = `/${locale}/login`;
         } else {
           console.log('Token is valid');
         }
       } catch (e) {
         console.error('Error decoding token:', e);
         // Redirect to login in case of an invalid token format
-        window.location.href = '/login';
+        window.location.href = `/${locale}/login`;
       }
     } else {
       console.log('No token found');
       // Redirect to login if token is missing
-      window.location.href = '/login';
+      window.location.href = `/${locale}/login`;
     }
     
-  }, [])
+  }, [locale])  // Add locale to dependencies
   
 
   const { fields, append, remove } = useFieldArray({
@@ -343,7 +348,7 @@ const CreateSurveyPage = () => {
             </button>
 
             <div className="flex justify-center mt-6">
-              <Link href="/survey/dashboard" legacyBehavior>
+              <Link href={`/${locale}/dashboard`} legacyBehavior>
                 <a className="flex items-center justify-center text-blue-500 hover:text-blue-700 font-medium text-lg">
                   <FaArrowLeft className="mr-2" /> {/* Back Icon */}
                   Go Back to Dashboard

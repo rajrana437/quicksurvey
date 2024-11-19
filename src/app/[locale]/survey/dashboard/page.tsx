@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { utils, writeFile } from 'xlsx';
 
@@ -21,6 +21,9 @@ const SurveyResponsesPage = () => {
   const [surveyResponses, setSurveyResponses] = useState<SurveyResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const pathname = usePathname(); // Get the current path
+
+  const locale = pathname ? pathname.split('/')[1] : 'en'; // Default to 'en'
 
 
   useEffect(() => {
@@ -32,7 +35,7 @@ const SurveyResponsesPage = () => {
 
       if (!token) {
         // Redirect to login if token is missing
-        router.push('/login');
+        router.push(`/${locale}/login`);
         return;
       }
 
@@ -47,7 +50,7 @@ const SurveyResponsesPage = () => {
       } catch (error) {
         console.error('Error fetching survey responses:', error);
         // Redirect to login on fetch error, which may indicate an invalid token
-        router.push('/login');
+        router.push(`/${locale}/login`);      
       } finally {
         setLoading(false);
       }
@@ -59,7 +62,7 @@ const SurveyResponsesPage = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token'); // Clear the token
-    router.push('/login'); // Redirect to login page
+    router.push(`/${locale}/login`);      
   };
 
   const downloadExcel = (surveyId: string) => {

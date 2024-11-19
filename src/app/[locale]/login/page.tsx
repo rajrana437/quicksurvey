@@ -1,13 +1,18 @@
 "use client"
 import { FormEvent, useState } from 'react';
-import FormField from '../components/FormField';
+import FormField from '../../components/FormField';
 import Image from 'next/image';
+import { usePathname } from "next/navigation";
+
 
 export default function LoginPage() {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const pathname = usePathname();
+  const locale = pathname ? pathname.split('/')[1] : 'en'; // Default to 'en' if pathname is null or not found
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -23,7 +28,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (data.token) {
         localStorage.setItem('token', data.token);
-        window.location.href = '/survey/dashboard';
+        window.location.href = `/${locale}/survey/dashboard`;
       } else {
         setError('Invalid credentials');
       }
@@ -95,7 +100,7 @@ export default function LoginPage() {
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{' '}
-                <a href="/signup" className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                <a href={`/${locale}/signup`} className="font-medium text-primary-600 hover:underline dark:text-primary-500">
                   Sign up
                 </a>
               </p>
