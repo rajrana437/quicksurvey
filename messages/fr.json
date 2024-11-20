@@ -1,6 +1,64 @@
 {
-    "HomePage": {
-      "title": "Bonjour Montreal!",
-      "about": "Aller à la page à propos"
+  "SurveyPage": {
+    "title": "Formulaire d'enquête",
+    "submit": "Soumettre",
+    "thankYou": "Merci pour votre réponse!",
+    "selectOption": "Sélectionner une option"
+  },
+  "CreateSurveyPage": {
+    "title": "Créer une enquête",
+    "addQuestion": "Ajouter une question",
+    "removeQuestion": "Supprimer la question",
+    "backToDashboard": "Retour au tableau de bord",
+    "surveyLink": "Lien de l'enquête"
+  },
+  "SurveyResponsesPage": {
+    "loadingDashboard": "Chargement du tableau de bord...",
+    "noDashboardAvailable": "Aucun tableau de bord disponible.",
+    "createSurvey": "Créer une enquête",
+    "logout": "Se déconnecter",
+    "dashboard": "Tableau de bord",
+    "surveyTitle": "Titre de l'enquête",
+    "username": "Nom d'utilisateur",
+    "responses": "Réponses",
+    "submittedOn": "Soumis le",
+    "download": "Télécharger",
+    "question": "Q"
+  },
+  "LoginPage": {
+    "title": "Connectez-vous à votre compte",
+    "username": "Votre nom d'utilisateur",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié?",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours...",
+    "signUp": "S'inscrire",
+    "error": {
+      "invalidCredentials": "Identifiants invalides",
+      "general": "Une erreur s'est produite, veuillez réessayer plus tard."
+    }
+  },
+  "SignUpPage": {
+    "title": "Créez votre compte",
+    "username": "Nom d'utilisateur",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "signUp": "S'inscrire",
+    "signIn": "Se connecter",
+    "validation": {
+      "usernameRequired": "Le nom d'utilisateur est requis",
+      "usernameMinLength": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "emailRequired": "L'email est requis",
+      "emailInvalid": "Veuillez entrer une adresse email valide",
+      "passwordRequired": "Le mot de passe est requis",
+      "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+      "passwordNumber": "Le mot de passe doit contenir au moins un chiffre",
+      "passwordSpecialChar": "Le mot de passe doit contenir au moins un caractère spécial"
+    },
+    "error": {
+      "general": "Quelque chose s'est mal passé. Veuillez réessayer."
     }
   }
+}

@@ -1,6 +1,64 @@
 {
-    "HomePage": {
-      "title": "Hello world!",
-      "about": "Go to the about page"
+  "SurveyPage": {
+    "title": "Survey Form",
+    "submit": "Submit",
+    "thankYou": "Thank you for your response!",
+    "selectOption": "Select an option"
+  },
+  "CreateSurveyPage": {
+    "title": "Create a Survey",
+    "addQuestion": "Add Question",
+    "removeQuestion": "Remove Question",
+    "backToDashboard": "Back to Dashboard",
+    "surveyLink": "Survey Link"
+  },
+  "SurveyResponsesPage": {
+    "loadingDashboard": "Loading dashboard...",
+    "noDashboardAvailable": "No dashboard available.",
+    "createSurvey": "Create Survey",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "surveyTitle": "Survey Title",
+    "username": "Username",
+    "responses": "Responses",
+    "submittedOn": "Submitted On",
+    "download": "Download",
+    "question": "Q"
+  },
+  "LoginPage": {
+    "title": "Login",
+    "username": "Username",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot Password?",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "signUp": "Sign Up",
+    "error": {
+      "invalidCredentials": "Invalid credentials",
+      "general": "An error occurred, please try again later."
+    }
+  },
+  "SignUpPage": {
+    "title": "Create Your Account",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "validation": {
+      "usernameRequired": "Username is required",
+      "usernameMinLength": "Username must be at least 3 characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "passwordNumber": "Password must contain at least one number",
+      "passwordSpecialChar": "Password must contain at least one special character"
+    },
+    "error": {
+      "general": "Something went wrong. Please try again."
     }
   }
+}
