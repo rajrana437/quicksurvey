@@ -23,10 +23,15 @@
     "responses": "Réponses",
     "submittedOn": "Soumis le",
     "download": "Télécharger",
-    "question": "Q"
+    "question": "Q",
+    "userId": "ID utilisateur",
+    "surveyId": "ID de l'enquête",
+    "survey": "Enquête",
+    "errorFetching": "Erreur lors de la récupération des réponses à l'enquête"
   },
   "LoginPage": {
     "title": "Connectez-vous à votre compte",
+    "projectName": "Enquête Rapide",
     "username": "Votre nom d'utilisateur",
     "password": "Mot de passe",
     "rememberMe": "Se souvenir de moi",
@@ -34,6 +39,8 @@
     "signIn": "Se connecter",
     "signingIn": "Connexion en cours...",
     "signUp": "S'inscrire",
+    "signUpQuestion": "Vous n’avez pas encore de compte?",
+
     "error": {
       "invalidCredentials": "Identifiants invalides",
       "general": "Une erreur s'est produite, veuillez réessayer plus tard."
@@ -42,11 +49,12 @@
   "SignUpPage": {
     "title": "Créez votre compte",
     "username": "Nom d'utilisateur",
-    "email": "E-mail",
+    "email": "Courriel",
     "password": "Mot de passe",
     "rememberMe": "Se souvenir de moi",
     "signUp": "S'inscrire",
     "signIn": "Se connecter",
+    "signUpQuestion": "Vous avez déjà un compte?",
     "validation": {
       "usernameRequired": "Le nom d'utilisateur est requis",
       "usernameMinLength": "Le nom d'utilisateur doit contenir au moins 3 caractères",

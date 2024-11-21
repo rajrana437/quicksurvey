@@ -23,10 +23,15 @@
     "responses": "Responses",
     "submittedOn": "Submitted On",
     "download": "Download",
-    "question": "Q"
+    "question": "Q",
+    "userId": "User ID",
+    "surveyId": "Survey ID",
+    "survey": "Survey",
+    "errorFetching": "Error fetching survey responses"
   },
   "LoginPage": {
     "title": "Login",
+    "projectName": "Quick Survey",
     "username": "Username",
     "password": "Password",
     "rememberMe": "Remember me",
@@ -34,6 +39,7 @@
     "signIn": "Sign In",
     "signingIn": "Signing in...",
     "signUp": "Sign Up",
+    "signUpQuestion": "Don’t have an account yet?",
     "error": {
       "invalidCredentials": "Invalid credentials",
       "general": "An error occurred, please try again later."
@@ -47,6 +53,7 @@
     "rememberMe": "Remember me",
     "signUp": "Sign Up",
     "signIn": "Sign In",
+    "signUpQuestion": "Already have an account?",
     "validation": {
       "usernameRequired": "Username is required",
       "usernameMinLength": "Username must be at least 3 characters",

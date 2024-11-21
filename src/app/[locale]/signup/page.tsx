@@ -3,69 +3,66 @@ import { FormEvent, useState } from "react";
 import { usePathname } from "next/navigation";
 import FormField from "../../components/FormField";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function SignUpPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ [key: string]: string }>({}); // Track validation errors
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Get the current locale from the pathname (assumes it's the first part of the path like '/en', '/fr')
   const pathname = usePathname();
-  const locale = pathname ? pathname.split('/')[1] : 'en'; // Default to 'en' if pathname is null or not found
+  const locale = pathname ? pathname.split('/')[1] : 'en';
+  const t = useTranslations("SignUpPage"); // Load translations for SignUpPage
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Validation logic
     const newErrors: { [key: string]: string } = {};
 
-    // Username validation (not empty, min length)
+    // Username validation
     if (!username) {
-      newErrors.username = "Username is required";
+      newErrors.username = t("validation.usernameRequired");
     } else if (username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters long";
+      newErrors.username = t("validation.usernameMinLength");
     }
 
-    // Email validation (valid email format)
+    // Email validation
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!email) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("validation.emailRequired");
     } else if (!emailRegex.test(email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = t("validation.emailInvalid");
     }
 
-    // Password validation (min length, at least one number, and one special character)
+    // Password validation
     if (!password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("validation.passwordRequired");
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
+      newErrors.password = t("validation.passwordMinLength");
     } else if (!/\d/.test(password)) {
-      newErrors.password = "Password must contain at least one number";
+      newErrors.password = t("validation.passwordNumber");
     } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      newErrors.password = "Password must contain at least one special character";
+      newErrors.password = t("validation.passwordSpecialChar");
     }
 
-    // If there are validation errors, set them in the state
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // If no errors, proceed with the signup API request
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),
     });
-    const data = await res.json();
 
+    const data = await res.json();
     if (data.token) {
       localStorage.setItem("token", data.token);
-      window.location.href = `/${locale}/survey/create`; // Redirect after successful signup with locale
+      window.location.href = `/${locale}/survey/create`;
     } else {
-      // Handle any error response (optional)
-      setErrors({ api: data.error || "Something went wrong. Please try again." });
+      setErrors({ api: t("error.general") });
     }
   };
 
@@ -73,7 +70,7 @@ export default function SignUpPage() {
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
-          href={`/${locale}`}  // Locale added to the logo link
+          href={`/${locale}`}
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
           <Image className="w-8 h-8 mr-2" src="/logo.png" alt="logo" width={100} height={100} />
@@ -82,31 +79,31 @@ export default function SignUpPage() {
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Create your account
+              {t("title")}
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <FormField
-                label="Username"
+                label={t("username")}
                 id="username"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Username"
+                placeholder={t("username")}
                 required
                 error={errors.username}
               />
               <FormField
-                label="Email"
+                label={t("email")}
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
+                placeholder={t("email")}
                 required
                 error={errors.email}
               />
               <FormField
-                label="Password"
+                label={t("password")}
                 id="password"
                 type="password"
                 value={password}
@@ -121,14 +118,13 @@ export default function SignUpPage() {
                   <div className="flex items-center h-5">
                     <input
                       id="remember"
-                      aria-describedby="remember"
                       type="checkbox"
                       className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                     />
                   </div>
                   <div className="ml-3 text-sm">
                     <label htmlFor="remember" className="text-gray-500 dark:text-gray-300">
-                      Remember me
+                      {t("rememberMe")}
                     </label>
                   </div>
                 </div>
@@ -137,15 +133,15 @@ export default function SignUpPage() {
                 type="submit"
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                Sign Up
+                {t("signUp")}
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Already have an account?{" "}
+                {t("signUpQuestion")}{" "}
                 <a
-                  href={`/${locale}/login`}  // Locale added to the login link
+                  href={`/${locale}/login`}
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
-                  Sign in
+                  {t("signIn")}
                 </a>
               </p>
             </form>
