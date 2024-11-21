@@ -74,8 +74,6 @@ const SurveyFormPage: React.FC = () => {
         answer: responses[question._id], // The response for each question
       }));
 
-      console.log(userResponses);
-
       // Uncomment and configure the API call when you're ready to submit the form
       const response = await axios.post('/api/surveys/submit', {
         surveyId: survey?.surveyId,

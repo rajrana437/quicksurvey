@@ -25,10 +25,7 @@ const SurveyResponsesPage = () => {
 
   useEffect(() => {
     const verifyTokenAndFetchResponses = async () => {
-      const token = localStorage.getItem('token');
-
-      console.log(token);
-      
+      const token = localStorage.getItem('token');      
 
       if (!token) {
         // Redirect to login if token is missing

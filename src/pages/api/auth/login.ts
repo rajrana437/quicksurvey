@@ -17,11 +17,7 @@ const loginHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { username, password } = req.body;
 
-  console.log(username, password);
-
   const user = await User.findOne({ username });
-
-  console.log(user);
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ error: 'Invalid credentials' });
