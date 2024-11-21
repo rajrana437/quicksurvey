@@ -5,12 +5,58 @@
     "thankYou": "Thank you for your response!",
     "selectOption": "Select an option"
   },
-  "CreateSurveyPage": {
-    "title": "Create a Survey",
-    "addQuestion": "Add Question",
-    "removeQuestion": "Remove Question",
-    "backToDashboard": "Back to Dashboard",
-    "surveyLink": "Survey Link"
+  "CreateSurvey": {
+    "titles": {
+      "createSurvey": "Create Survey"
+    },
+    "fields": {
+      "title": "Survey Title",
+      "numQuestions": "Number of Questions",
+      "question": "Question {{index}}",
+      "answerType": "Answer Type",
+      "options": "Options"
+    },
+    "placeholders": {
+      "title": "Enter survey title",
+      "numQuestions": "Enter the number of questions",
+      "question": "Enter your question",
+      "options": "Enter the options, one per line"
+    },
+    "answerTypes": {
+      "text": "Text",
+      "radio": "Radio",
+      "checkbox": "Checkbox",
+      "dropdown": "Dropdown"
+    },
+    "buttons": {
+      "submit": "Submit Survey",
+      "addQuestion": "Add Question"
+    },
+    "errors": {
+      "titleMissing": "Survey title is required.",
+      "invalidNumQuestions": "Please enter a valid number of questions.",
+      "questionMissing": "Question {{index}} is required.",
+      "optionsMissing": "Options are required for question {{index}}.",
+      "missingAuthToken": "Authentication token is missing or invalid.",
+      "surveyCreationFailed": "Failed to create survey. Please try again."
+    },
+    "success": {
+      "surveyCreated": "Survey created successfully!"
+    },
+    "textAreaPlaceholders": {
+      "options": "Enter options for radio, checkbox or dropdown (separated by commas)"
+    },
+    "actions": {
+      "copy": "Copy",
+      "cancel": "Cancel",
+      "resetQuestions": "Reset Questions",
+      "goBackToDashboard": "Go Back to Dashboard",
+      "close": "Close"
+    },
+    "messages": {
+      "surveyLinkReady": "Your survey link is ready!",
+      "confirmResetQuestions": "Are you sure you want to reset all questions?"
+    }
   },
   "SurveyResponsesPage": {
     "loadingDashboard": "Loading dashboard...",

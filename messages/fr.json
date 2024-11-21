@@ -5,12 +5,58 @@
     "thankYou": "Merci pour votre réponse!",
     "selectOption": "Sélectionner une option"
   },
-  "CreateSurveyPage": {
-    "title": "Créer une enquête",
-    "addQuestion": "Ajouter une question",
-    "removeQuestion": "Supprimer la question",
-    "backToDashboard": "Retour au tableau de bord",
-    "surveyLink": "Lien de l'enquête"
+  "CreateSurvey": {
+    "titles": {
+      "createSurvey": "Créer un sondage"
+    },
+    "fields": {
+      "title": "Titre du sondage",
+      "numQuestions": "Nombre de questions",
+      "question": "Question {{index}}",
+      "answerType": "Type de réponse",
+      "options": "Options"
+    },
+    "placeholders": {
+      "title": "Entrez le titre du sondage",
+      "numQuestions": "Entrez le nombre de questions",
+      "question": "Entrez votre question",
+      "options": "Entrez les options, une par ligne"
+    },
+    "answerTypes": {
+      "text": "Texte",
+      "radio": "Radio",
+      "checkbox": "Case à cocher",
+      "dropdown": "Liste déroulante"
+    },
+    "buttons": {
+      "submit": "Soumettre le sondage",
+      "addQuestion": "Ajouter une question"
+    },
+    "errors": {
+      "titleMissing": "Le titre du sondage est requis.",
+      "invalidNumQuestions": "Veuillez entrer un nombre valide de questions.",
+      "questionMissing": "La question {{index}} est requise.",
+      "optionsMissing": "Les options sont requises pour la question {{index}}.",
+      "missingAuthToken": "Le jeton d'authentification est manquant ou invalide.",
+      "surveyCreationFailed": "La création du sondage a échoué. Veuillez réessayer."
+    },
+    "success": {
+      "surveyCreated": "Sondage créé avec succès!"
+    },
+    "textAreaPlaceholders": {
+      "options": "Entrez les options pour radio, case à cocher ou liste déroulante (séparées par des virgules)"
+    },
+    "actions": {
+      "copy": "Copier",
+      "cancel": "Annuler",
+      "resetQuestions": "Réinitialiser les questions",
+      "goBackToDashboard": "Retour au tableau de bord",
+      "close": "Fermer"
+    },
+    "messages": {
+      "surveyLinkReady": "Le lien de votre sondage est prêt !",
+      "confirmResetQuestions": "Êtes-vous sûr de vouloir réinitialiser toutes les questions ?"
+    }
   },
   "SurveyResponsesPage": {
     "loadingDashboard": "Chargement du tableau de bord...",
@@ -40,7 +86,6 @@
     "signingIn": "Connexion en cours...",
     "signUp": "S'inscrire",
     "signUpQuestion": "Vous n’avez pas encore de compte?",
-
     "error": {
       "invalidCredentials": "Identifiants invalides",
       "general": "Une erreur s'est produite, veuillez réessayer plus tard."
