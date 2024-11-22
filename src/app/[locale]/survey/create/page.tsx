@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl'; // For localization support
 interface SurveyForm {
   title: string;
   numQuestions: string;
-  questions: { question: string; answerType: string; options?: string[] }[];
+  questions: { question: string; answerType: string;  options?: string[] | string }[];
 }
 
 const CreateSurveyPage = () => {
@@ -37,10 +37,10 @@ const CreateSurveyPage = () => {
         const payload = JSON.parse(atob(token.split('.')[1]));
 
         if (payload.exp && Date.now() >= payload.exp * 1000) {
-          console.log('Token is expired');
+          // console.log('Token is expired');
           window.location.href = `/${locale}/login`;
         } else {
-          console.log('Token is valid');
+          // console.log('Token is valid');
         }
       } catch (e) {
         console.error('Error decoding token:', e);
@@ -83,13 +83,20 @@ const CreateSurveyPage = () => {
         return;
       }
 
+      console.log(question.options);
+      
+      if (typeof question.options === 'string') {
+        question.options = question.options.split(',').map(opt => opt.trim());
+      }
+      
+
       if (
         (question.answerType === 'radio' || question.answerType === 'checkbox' || question.answerType === 'dropdown') &&
-        (!question.options || question.options.length === 0 || question.options.every(opt => !opt.trim()))
+        (!Array.isArray(question.options) || question.options.length === 0 || question.options.every(opt => !opt.trim()))
       ) {
         alert(t('errors.optionsMissing', { index: i + 1 }));
         return;
-      }
+      }      
     }
 
     const token = localStorage.getItem('token');
@@ -111,7 +118,7 @@ const CreateSurveyPage = () => {
       console.log(t('success.surveyCreated'), response.data);
       if (response.data.link) {
         setLinkShowModal(true);
-        setSurveyLink(response.data.link);
+        setSurveyLink(`${window.location.origin}/${locale}/${response.data.link}`);
       }
     } catch (error) {
       console.error(t('errors.surveyCreationFailed'), error);

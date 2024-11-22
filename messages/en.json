@@ -12,7 +12,7 @@
     "fields": {
       "title": "Survey Title",
       "numQuestions": "Number of Questions",
-      "question": "Question {{index}}",
+      "question": "Question {index}",
       "answerType": "Answer Type",
       "options": "Options"
     },
@@ -35,8 +35,8 @@
     "errors": {
       "titleMissing": "Survey title is required.",
       "invalidNumQuestions": "Please enter a valid number of questions.",
-      "questionMissing": "Question {{index}} is required.",
-      "optionsMissing": "Options are required for question {{index}}.",
+      "questionMissing": "Question {index} is required.",
+      "optionsMissing": "Options are required for question {index}.",
       "missingAuthToken": "Authentication token is missing or invalid.",
       "surveyCreationFailed": "Failed to create survey. Please try again."
     },

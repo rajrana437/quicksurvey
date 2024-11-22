@@ -12,7 +12,7 @@
     "fields": {
       "title": "Titre du sondage",
       "numQuestions": "Nombre de questions",
-      "question": "Question {{index}}",
+      "question": "Question {index}",
       "answerType": "Type de réponse",
       "options": "Options"
     },
@@ -35,8 +35,8 @@
     "errors": {
       "titleMissing": "Le titre du sondage est requis.",
       "invalidNumQuestions": "Veuillez entrer un nombre valide de questions.",
-      "questionMissing": "La question {{index}} est requise.",
-      "optionsMissing": "Les options sont requises pour la question {{index}}.",
+      "questionMissing": "La question {index} est requise.",
+      "optionsMissing": "Les options sont requises pour la question {index}.",
       "missingAuthToken": "Le jeton d'authentification est manquant ou invalide.",
       "surveyCreationFailed": "La création du sondage a échoué. Veuillez réessayer."
     },
