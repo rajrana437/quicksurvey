@@ -1,4 +1,3 @@
-// src/app/[locale]/layout.tsx
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -22,28 +21,29 @@ const geistMono = localFont({
 
 // Define the Params interface
 interface Params {
-  locale: Locale;
+  locale: Locale;  // Locale type matches with your routing logic
 }
 
 type Props = {
   children: React.ReactNode;
-  params: Params;
+  params: Params; // The type of params is already defined with 'locale' being part of it.
 };
 
 export async function generateStaticParams() {
+  // Ensuring correct typing for the locales
   return routing.locales.map((locale) => ({ locale }));
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
-  const { locale } = await params;
+  const { locale } = params;  // No need to await params, it's already a plain object
 
   // Ensure that the locale is valid
   if (!routing.locales.includes(locale)) {
-    notFound();
+    notFound();  // Handle invalid locale by showing 404 or similar
   }
 
-  // Fetch the messages for the locale
-  const messages = await getMessages(locale);
+  // Fetch the messages for the locale. Assuming getMessages() expects an object like { locale: 'en' }
+  const messages = await getMessages({ locale }); // Pass an object with locale
 
   return (
     <NextIntlClientProvider messages={messages}>
