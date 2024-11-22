@@ -1,0 +1,125 @@
+{
+  "SurveyPage": {
+    "title": "Formulaire d'enquête",
+    "submit": "Soumettre",
+    "thankYou": "Merci pour votre réponse!",
+    "selectOption": "Sélectionner une option",
+    "loading": "Chargement...",
+    "responsePlaceholder": "Votre réponse",
+    "checkboxOption": "Option de case à cocher",
+    "radioOption": "Option radio",
+    "dropdownOption": "Option déroulante",
+    "reset": "Réinitialiser les réponses",
+    "submissionSuccess": "Enquête soumise avec succès!",
+    "submissionError": "Erreur lors de la soumission de l'enquête. Veuillez réessayer."
+  },
+  "CreateSurvey": {
+    "titles": {
+      "createSurvey": "Créer un sondage"
+    },
+    "fields": {
+      "title": "Titre du sondage",
+      "numQuestions": "Nombre de questions",
+      "question": "Question {index}",
+      "answerType": "Type de réponse",
+      "options": "Options"
+    },
+    "placeholders": {
+      "title": "Entrez le titre du sondage",
+      "numQuestions": "Entrez le nombre de questions",
+      "question": "Entrez votre question",
+      "options": "Entrez les options, une par ligne"
+    },
+    "answerTypes": {
+      "text": "Texte",
+      "radio": "Radio",
+      "checkbox": "Case à cocher",
+      "dropdown": "Liste déroulante"
+    },
+    "buttons": {
+      "submit": "Soumettre le sondage",
+      "addQuestion": "Ajouter une question"
+    },
+    "errors": {
+      "titleMissing": "Le titre du sondage est requis.",
+      "invalidNumQuestions": "Veuillez entrer un nombre valide de questions.",
+      "questionMissing": "La question {index} est requise.",
+      "optionsMissing": "Les options sont requises pour la question {index}.",
+      "missingAuthToken": "Le jeton d'authentification est manquant ou invalide.",
+      "surveyCreationFailed": "La création du sondage a échoué. Veuillez réessayer."
+    },
+    "success": {
+      "surveyCreated": "Sondage créé avec succès!"
+    },
+    "textAreaPlaceholders": {
+      "options": "Entrez les options pour radio, case à cocher ou liste déroulante (séparées par des virgules)"
+    },
+    "actions": {
+      "copy": "Copier",
+      "cancel": "Annuler",
+      "resetQuestions": "Réinitialiser les questions",
+      "goBackToDashboard": "Retour au tableau de bord",
+      "close": "Fermer"
+    },
+    "messages": {
+      "surveyLinkReady": "Le lien de votre sondage est prêt !",
+      "confirmResetQuestions": "Êtes-vous sûr de vouloir réinitialiser toutes les questions ?"
+    }
+  },
+  "SurveyResponsesPage": {
+    "loadingDashboard": "Chargement du tableau de bord...",
+    "noDashboardAvailable": "Aucun tableau de bord disponible.",
+    "createSurvey": "Créer une enquête",
+    "logout": "Se déconnecter",
+    "dashboard": "Tableau de bord",
+    "surveyTitle": "Titre de l'enquête",
+    "username": "Nom d'utilisateur",
+    "responses": "Réponses",
+    "submittedOn": "Soumis le",
+    "download": "Télécharger",
+    "question": "Q",
+    "userId": "ID utilisateur",
+    "surveyId": "ID de l'enquête",
+    "survey": "Enquête",
+    "errorFetching": "Erreur lors de la récupération des réponses à l'enquête"
+  },
+  "LoginPage": {
+    "title": "Connectez-vous à votre compte",
+    "projectName": "Enquête Rapide",
+    "username": "Votre nom d'utilisateur",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié?",
+    "signIn": "Se connecter",
+    "signingIn": "Connexion en cours...",
+    "signUp": "S'inscrire",
+    "signUpQuestion": "Vous n’avez pas encore de compte?",
+    "error": {
+      "invalidCredentials": "Identifiants invalides",
+      "general": "Une erreur s'est produite, veuillez réessayer plus tard."
+    }
+  },
+  "SignUpPage": {
+    "title": "Créez votre compte",
+    "username": "Nom d'utilisateur",
+    "email": "Courriel",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "signUp": "S'inscrire",
+    "signIn": "Se connecter",
+    "signUpQuestion": "Vous avez déjà un compte?",
+    "validation": {
+      "usernameRequired": "Le nom d'utilisateur est requis",
+      "usernameMinLength": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+      "emailRequired": "L'email est requis",
+      "emailInvalid": "Veuillez entrer une adresse email valide",
+      "passwordRequired": "Le mot de passe est requis",
+      "passwordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+      "passwordNumber": "Le mot de passe doit contenir au moins un chiffre",
+      "passwordSpecialChar": "Le mot de passe doit contenir au moins un caractère spécial"
+    },
+    "error": {
+      "general": "Quelque chose s'est mal passé. Veuillez réessayer."
+    }
+  }
+}

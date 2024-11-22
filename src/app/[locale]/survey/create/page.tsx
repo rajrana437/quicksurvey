@@ -2,19 +2,25 @@
 
 import { useEffect, useState } from 'react';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import { FaTrash, FaPlus, FaClipboard, FaArrowLeft } from 'react-icons/fa';  // Added FaArrowLeft for the back icon
+import { FaTrash, FaPlus, FaClipboard, FaArrowLeft } from 'react-icons/fa';
 import './styles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl'; // For localization support
 
 interface SurveyForm {
   title: string;
   numQuestions: string;
-  questions: { question: string; answerType: string; options?: string[] }[];
+  questions: { question: string; answerType: string;  options?: string[] | string }[];
 }
 
 const CreateSurveyPage = () => {
+  const pathname = usePathname();
+  const locale = pathname ? pathname.split('/')[1] : 'en'; // Get locale from pathname
+  const t = useTranslations('CreateSurvey'); // Access translations under the "CreateSurvey" namespace
+
   const { control, handleSubmit, watch, setValue, reset, getValues, formState: { errors: _errors } } = useForm<SurveyForm>({
     defaultValues: {
       title: '',
@@ -24,35 +30,27 @@ const CreateSurveyPage = () => {
   });
 
   useEffect(() => {
-
     const token = localStorage.getItem('token');
 
     if (token) {
       try {
-        // Decode the token payload (split by '.' and take the second part)
         const payload = JSON.parse(atob(token.split('.')[1]));
-        
-        // Check if `exp` exists and is a valid timestamp
+
         if (payload.exp && Date.now() >= payload.exp * 1000) {
-          console.log('Token is expired');
-          // Redirect to login
-          window.location.href = '/login';
+          // console.log('Token is expired');
+          window.location.href = `/${locale}/login`;
         } else {
-          console.log('Token is valid');
+          // console.log('Token is valid');
         }
       } catch (e) {
         console.error('Error decoding token:', e);
-        // Redirect to login in case of an invalid token format
-        window.location.href = '/login';
+        window.location.href = `/${locale}/login`;
       }
     } else {
       console.log('No token found');
-      // Redirect to login if token is missing
-      window.location.href = '/login';
+      window.location.href = `/${locale}/login`;
     }
-    
-  }, [])
-  
+  }, [locale]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -65,91 +63,89 @@ const CreateSurveyPage = () => {
   const [surveyLink, setSurveyLink] = useState<string>('');
   const [linkShowModal, setLinkShowModal] = useState<boolean>(false);
 
-
   const onSubmit = async (data: SurveyForm) => {
-    // Basic validation checks
     const { title, numQuestions, questions } = data;
-  
-    // Check if title is provided
+
     if (!title.trim()) {
-      alert("Please enter a survey title.");
+      alert(t('errors.titleMissing'));
       return;
     }
-  
-    // Check if numQuestions is a valid number and greater than 0
+
     if (!numQuestions || isNaN(parseInt(numQuestions)) || parseInt(numQuestions) <= 0) {
-      alert("Please enter a valid number of questions.");
+      alert(t('errors.invalidNumQuestions'));
       return;
     }
-  
-    // Check if questions are filled correctly
+
     for (let i = 0; i < questions.length; i++) {
       const question = questions[i];
       if (!question.question.trim()) {
-        alert(`Question ${i + 1} is missing a question text.`);
+        alert(t('errors.questionMissing', { index: i + 1 }));
         return;
       }
-      // Check options for answer types that require options
+
+      console.log(question.options);
+      
+      if (typeof question.options === 'string') {
+        question.options = question.options.split(',').map(opt => opt.trim());
+      }
+      
+
       if (
         (question.answerType === 'radio' || question.answerType === 'checkbox' || question.answerType === 'dropdown') &&
-        (!question.options || question.options.length === 0 || question.options.every(opt => !opt.trim()))
+        (!Array.isArray(question.options) || question.options.length === 0 || question.options.every(opt => !opt.trim()))
       ) {
-        alert(`Please provide options for Question ${i + 1}.`);
+        alert(t('errors.optionsMissing', { index: i + 1 }));
         return;
-      }
+      }      
     }
-  
-    // If all checks pass, proceed with the API call
+
     const token = localStorage.getItem('token');
     if (!token) {
-      console.error('Missing auth token. Please log in to create a survey.');
+      console.error(t('errors.missingAuthToken'));
       return;
     }
-  
-    const uniqueSurveyId = uuidv4(); // Generate a unique ID using uuid
-    const surveyData = { ...data, surveyId: uniqueSurveyId }; // Add surveyId to data
-  
+
+    const uniqueSurveyId = uuidv4();
+    const surveyData = { ...data, surveyId: uniqueSurveyId };
+
     try {
       const response = await axios.post('/api/surveys/create', surveyData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
-      console.log('Survey created successfully:', response.data);
+
+      console.log(t('success.surveyCreated'), response.data);
       if (response.data.link) {
         setLinkShowModal(true);
-        setSurveyLink(response.data.link); // Set the survey link from the response
+        setSurveyLink(`${window.location.origin}/${locale}/${response.data.link}`);
       }
     } catch (error) {
-      console.error('Error creating survey:', error);
-    }
-  };
-  
+      console.error(t('errors.surveyCreationFailed'), error);
+          }
+        };
+          const numQuestions = watch('numQuestions');
 
-  const numQuestions = watch('numQuestions');
-
-  const handleAnswerTypeChange = (index: number, value: string) => {
-    setValue(`questions.${index}.answerType`, value);
-    if (value !== 'dropdown') {
-      setValue(`questions.${index}.options`, []);
+      const handleAnswerTypeChange = (index: number, value: string) => {
+        setValue(`questions.${index}.answerType`, value);
+        if (value !== 'dropdown') {
+          setValue(`questions.${index}.options`, []);
     }
   };
 
   const handleNumQuestionsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value ? parseInt(e.target.value) : '';
-    const currentTitle = getValues('title'); // Get the current title value
+    const currentTitle = getValues('title');
 
     if (value >= '0' || value === '') {
       setShowError(false);
-      setValue("numQuestions", value.toString());
+      setValue('numQuestions', value.toString());
       if (typeof value === 'number') {
         setIsDisabled(true);
         const newFields = Array(value).fill({ question: '', answerType: 'text', options: [] });
 
-        // Reset while preserving the current title
         reset({
-          title: currentTitle, // Keep the current title value
+          title: currentTitle,
           numQuestions: value.toString(),
           questions: newFields,
         });
@@ -193,7 +189,9 @@ const CreateSurveyPage = () => {
     if (type === 'dropdown' || type === 'radio' || type === 'checkbox') {
       return (
         <div>
-          <label className="block text-sm font-medium text-gray-900 dark:text-white">Options</label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-white">
+          {t('fields.options')}
+          </label>
           <Controller
             control={control}
             name={`questions.${index}.options`}
@@ -201,7 +199,7 @@ const CreateSurveyPage = () => {
               <textarea
                 {...field}
                 rows={3}
-                placeholder="Enter options separated by commas (e.g., Option 1, Option 2)"
+                placeholder={t('textAreaPlaceholders.options')}
                 className="block w-full p-2.5 border rounded-lg dark:bg-gray-700 dark:text-white"
               />
             )}
@@ -217,15 +215,13 @@ const CreateSurveyPage = () => {
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 max-w-3xl">
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            {/* ... existing survey creation form code */}
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Create a Survey
+              {t('titles.createSurvey')}
             </h1>
 
-            {/* Survey Title Input */}
             <div>
               <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Survey Title
+                {t('fields.title')}
               </label>
               <Controller
                 control={control}
@@ -242,30 +238,28 @@ const CreateSurveyPage = () => {
               />
             </div>
 
-            {/* Number of Questions Input */}
             <div>
               <label htmlFor="numQuestions" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                How many questions do you need?
+                {t('fields.numQuestions')}
               </label>
               <input
                 type="number"
                 id="numQuestions"
-                value={numQuestions}
+                value={watch('numQuestions')}
                 onChange={handleNumQuestionsChange}
-                // disabled={isDisabled}
                 className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Number of questions"
+                placeholder={t('placeholders.numQuestions')}
                 required
               />
               {showError && (
-                <p className="text-red-500 text-sm">Please enter a valid number of questions (greater than or equal to 0).</p>
+                <p className="text-red-500 text-sm">{t('errors.invalidNumQuestions')}</p>
               )}
-              {isDisabled && (
+               {isDisabled && (
                 <button
                   onClick={handleReset}
                   className="mt-2 text-sm text-red-500 underline"
                 >
-                  Reset Questions
+                  {t('actions.resetQuestions')}
                 </button>
               )}
             </div>
@@ -280,8 +274,8 @@ const CreateSurveyPage = () => {
                     <FaTrash />
                   </button>
                   <div>
-                    <label htmlFor={`question${index}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Question {index + 1}
+                  <label htmlFor={`question${index}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  {t('fields.question', { index: index + 1 })}
                     </label>
                     <Controller
                       control={control}
@@ -290,7 +284,7 @@ const CreateSurveyPage = () => {
                         <input
                           {...field}
                           type="text"
-                          placeholder="Enter your question"
+                          placeholder={t('placeholders.question')}
                           className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
                       )}
@@ -298,8 +292,8 @@ const CreateSurveyPage = () => {
                   </div>
 
                   <div>
-                    <label htmlFor={`answerType${index}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                      Answer Type
+                  <label htmlFor={`answerType${index}`} className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  {t('fields.answerType')}
                     </label>
                     <Controller
                       control={control}
@@ -310,10 +304,10 @@ const CreateSurveyPage = () => {
                           onChange={(e) => handleAnswerTypeChange(index, e.target.value)}
                           className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                          <option value="text">Text</option>
-                          <option value="radio">Radio Buttons</option>
-                          <option value="checkbox">Checkboxes</option>
-                          <option value="dropdown">Dropdown</option>
+                          <option value="text">{t('answerTypes.text')}</option>
+                          <option value="radio">{t('answerTypes.radio')}</option>
+                          <option value="checkbox">{t('answerTypes.checkbox')}</option>
+                          <option value="dropdown">{t('answerTypes.dropdown')}</option>
                         </select>
                       )}
                     />
@@ -330,36 +324,36 @@ const CreateSurveyPage = () => {
                 onClick={handleAddQuestion}
                 className="flex items-center text-blue-500 font-medium"
               >
-                <FaPlus className="mr-1" /> Add Question
+                <FaPlus className="mr-2" />
+                {t('buttons.addQuestion')}
               </button>
             )}
-            {/* Submit Button */}
-            <button
-              type="submit"
-              onClick={handleSubmit(onSubmit)}
-              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Create Survey
-            </button>
 
-            <div className="flex justify-center mt-6">
-              <Link href="/survey/dashboard" legacyBehavior>
+              <button
+                type="submit"
+                onClick={handleSubmit(onSubmit)}
+                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                {t('buttons.submit')}
+              </button>
+
+              <div className="flex justify-center mt-6">
+              <Link href={`/${locale}/survey/dashboard`} legacyBehavior>
                 <a className="flex items-center justify-center text-blue-500 hover:text-blue-700 font-medium text-lg">
                   <FaArrowLeft className="mr-2" /> {/* Back Icon */}
-                  Go Back to Dashboard
+                  {t('actions.goBackToDashboard')}
                 </a>
               </Link>
             </div>
           </div>
-
         </div>
       </div>
 
 
 
 
-      {/* Modal for reset confirmation */}
-      {showModal && (
+            {/* Modal for reset confirmation */}
+            {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
             <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">Are you sure you want to reset all questions?</p>
@@ -367,13 +361,13 @@ const CreateSurveyPage = () => {
               onClick={confirmReset}
               className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none"
             >
-              Confirm Reset
+             {t('messages.confirmResetQuestions')}
             </button>
             <button
               onClick={() => setShowModal(false)}
               className="px-4 py-2 ml-2 text-gray-700 border rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 focus:outline-none"
             >
-              Cancel
+              {t('actions.cancel')}
             </button>
           </div>
         </div>
@@ -398,7 +392,7 @@ const CreateSurveyPage = () => {
                   <FaClipboard />
                 </button>
                 <div className="hidden absolute top-full left-1/2 -translate-x-1/2 bg-gray-800 text-white p-2 rounded-md shadow-md group-hover:block">
-                  Copy
+                {t('actions.copy')}
                 </div>
               </div>
             </div>
@@ -406,14 +400,15 @@ const CreateSurveyPage = () => {
               onClick={() => { setLinkShowModal(false), confirmReset() }}
               className="mt-4 px-4 py-2 text-gray-700 border rounded-lg hover:bg-gray-100 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 focus:outline-none"
             >
-              Close
+              {t('actions.close')}
             </button>
           </div>
         </div>
       )}
-
     </section>
   );
+
 };
+  
 
 export default CreateSurveyPage;

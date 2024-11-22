@@ -46,7 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await survey.save();
 
   // Generate the survey link using the saved survey ID
-  const surveyLink = `${process.env.HOST_URL}/survey/${survey.surveyId}`;
+  const surveyLink = `survey/${survey.surveyId}`;
 
   res.status(201).json({ survey, link: surveyLink });
 };
