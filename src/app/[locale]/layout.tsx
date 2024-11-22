@@ -8,25 +8,25 @@ import "../globals.css"; // Assuming you still want to use the global styles
 
 // Import the Geist fonts
 const geistSans = localFont({
-  src: '../fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
+  src: "../fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
 });
 
 const geistMono = localFont({
-  src: '../fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
+  src: "../fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
 });
 
 // Define the Params interface
 interface Params {
-  locale: Locale;  // Locale type matches with your routing logic
+  locale: Locale; // Locale type matches with your routing logic
 }
 
 type Props = {
   children: React.ReactNode;
-  params: Params; // The type of params is already defined with 'locale' being part of it.
+  params: Promise<Params> | Params; // Account for async params
 };
 
 export async function generateStaticParams() {
@@ -35,11 +35,12 @@ export async function generateStaticParams() {
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
-  const { locale } = params;  // No need to await params, it's already a plain object
+  const resolvedParams = await params; // Await params if it's a Promise
+  const { locale } = resolvedParams;
 
   // Ensure that the locale is valid
   if (!routing.locales.includes(locale)) {
-    notFound();  // Handle invalid locale by showing 404 or similar
+    notFound(); // Handle invalid locale by showing 404 or similar
   }
 
   // Fetch the messages for the locale. Assuming getMessages() expects an object like { locale: 'en' }
