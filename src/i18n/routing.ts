@@ -3,7 +3,7 @@ import { createNavigation } from 'next-intl/navigation';
 
 // routing.ts
 export const routing = {
-  locales: ["en", "de", "fr", "es"] as const, // The 'as const' makes this a tuple of literal types
+  locales: ["en", "fr"] as const, // The 'as const' makes this a tuple of literal types
 };
 
 export type Locale = (typeof routing.locales)[number]; // Create a type for valid locales
