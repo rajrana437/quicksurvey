@@ -30,7 +30,7 @@ interface LayoutProps {
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {
-  const { locale } = await params; // No need to `await`
+  const { locale } = params; // Await params before accessing properties
 
   // Validate the locale
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
