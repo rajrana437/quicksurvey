@@ -13,6 +13,9 @@
     "submissionSuccess": "Enquête soumise avec succès!",
     "submissionError": "Erreur lors de la soumission de l'enquête. Veuillez réessayer."
   },
+  "Home": {
+    "welcome": "Bonjour"
+  },
   "CreateSurvey": {
     "titles": {
       "createSurvey": "Créer un sondage"

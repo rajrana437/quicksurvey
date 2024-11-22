@@ -3,9 +3,12 @@
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import { Link } from '@/i18n/routing'; // Import Link for routing
+import "../globals.css"; // Import global styles for fonts and themes
 
-export default function Home() {
+const geistSans = "font-[var(--font-geist-sans)]"; // Assuming font is globally defined
+
+export default function LocaleHome() {
   const router = useRouter();
   const pathname = usePathname(); // Get the current path
 
@@ -24,9 +27,13 @@ export default function Home() {
     }
   }, [router, locale]);
 
+  const t = useTranslations('Home');
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {/* Empty content as redirection will handle page navigation */}
+    <div className={`grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 ${geistSans}`}>
+      {/* You can keep the translation content if needed */}
+      <h1>{t("welcome", { locale })}</h1>
+      {/* Empty content, as the redirect will handle page navigation */}
     </div>
   );
 }

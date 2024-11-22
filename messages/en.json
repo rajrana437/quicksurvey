@@ -13,6 +13,9 @@
     "submissionSuccess": "Survey submitted successfully!",
     "submissionError": "Error submitting the survey. Please try again."
   },
+  "Home": {
+    "welcome": "Welcome"
+  },
   "CreateSurvey": {
     "titles": {
       "createSurvey": "Create Survey"
