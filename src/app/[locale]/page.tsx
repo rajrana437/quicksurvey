@@ -8,7 +8,6 @@ import { Link } from '@/i18n/routing';
 export default function Home() {
   const router = useRouter();
   const pathname = usePathname(); // Get the current path
-  const t = useTranslations('HomePage');
 
   // Extract locale from the pathname, fallback to a default locale if pathname is null
   const locale = pathname ? pathname.split('/')[1] : 'en'; // Default to 'en'
