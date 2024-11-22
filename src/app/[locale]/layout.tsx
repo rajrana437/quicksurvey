@@ -19,31 +19,29 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// Define the Params interface
-interface Params {
-  locale: Locale; // Locale type matches with your routing logic
-}
+// Define the Params type as a promise
+type Params = { locale: Locale };
 
 type Props = {
   children: React.ReactNode;
-  params: Promise<Params> | Params; // Account for async params
+  params: Promise<Params>; // Ensure params is treated as a Promise
 };
 
 export async function generateStaticParams() {
-  // Ensuring correct typing for the locales
+  // Generate params for all locales
   return routing.locales.map((locale) => ({ locale }));
 }
 
 export default async function LocaleLayout({ children, params }: Props) {
-  const resolvedParams = await params; // Await params if it's a Promise
+  const resolvedParams = await params; // Await the resolved params
   const { locale } = resolvedParams;
 
-  // Ensure that the locale is valid
+  // Validate the locale
   if (!routing.locales.includes(locale)) {
-    notFound(); // Handle invalid locale by showing 404 or similar
+    notFound(); // Handle invalid locale by returning 404
   }
 
-  // Fetch the messages for the locale. Assuming getMessages() expects an object like { locale: 'en' }
+  // Fetch the messages for the locale
   const messages = await getMessages({ locale }); // Pass an object with locale
 
   return (
