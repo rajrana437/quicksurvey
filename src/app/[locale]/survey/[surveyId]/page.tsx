@@ -1,7 +1,8 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useTranslations } from 'next-intl'; // For localization support
 
 interface Question {
   question: string;
@@ -18,44 +19,41 @@ interface Survey {
 }
 
 const SurveyFormPage: React.FC = () => {
+  const t = useTranslations('SurveyPage'); // Initialize translation hook
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [responses, setResponses] = useState<Record<string, string | string[]>>({});
-  const [initialResponses, setInitialResponses] = useState<Record<string, string | string[]>>({}); // Store initial responses
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false); // Track submission status
+  const [initialResponses, setInitialResponses] = useState<Record<string, string | string[]>>({});
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  // Fetch survey data on component mount
   useEffect(() => {
     const fetchSurvey = async () => {
       const url = window.location.href;
-      const surveyId = url.split('/').pop(); // Extract surveyId
+      const surveyId = url.split('/').pop();
 
       if (surveyId) {
         try {
           const response = await axios.get(`/api/surveys/${surveyId}`);
           setSurvey(response.data.survey);
 
-          // Initialize the responses state
           const initialResponses: Record<string, string | string[]> = {};
           response.data.survey.questions.forEach((question: Question) => {
-            // Set default value for each question type
             if (question.answerType === 'checkbox') {
-              initialResponses[question._id] = []; // Initialize as an empty array for checkboxes
+              initialResponses[question._id] = [];
             } else {
-              initialResponses[question._id] = ''; // Initialize as an empty string for other types
+              initialResponses[question._id] = '';
             }
           });
 
           setResponses(initialResponses);
-          setInitialResponses(initialResponses); // Store initial state
-
+          setInitialResponses(initialResponses);
         } catch (error) {
-          console.error('Error fetching survey:', error);
+          console.error(t('submissionError'), error);
         }
       }
     };
 
     fetchSurvey();
-  }, []);
+  }, [t]);
 
   const handleResponseChange = (questionId: string, value: string | string[]) => {
     setResponses((prevResponses) => ({
@@ -68,15 +66,11 @@ const SurveyFormPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      // Prepare the data to send
       const userResponses = survey?.questions.map((question) => ({
         questionId: question._id,
-        answer: responses[question._id], // The response for each question
+        answer: responses[question._id],
       }));
 
-      console.log(userResponses);
-
-      // Uncomment and configure the API call when you're ready to submit the form
       const response = await axios.post('/api/surveys/submit', {
         surveyId: survey?.surveyId,
         userId: survey?.creatorId,
@@ -84,19 +78,15 @@ const SurveyFormPage: React.FC = () => {
       });
 
       if (response.status === 201) {
-        alert('Survey submitted successfully!');
-        
-        // Reset the responses after submission
-        setResponses(initialResponses); // Reset responses to initial state
-
-        // Set the form as submitted
+        alert(t('submissionSuccess'));
+        setResponses(initialResponses);
         setIsSubmitted(true);
       } else {
-        alert('Something went wrong. Please try again.');
+        alert(t('submissionError'));
       }
     } catch (error) {
-      console.error('Error submitting survey:', error);
-      alert('Error submitting the survey. Please try again.');
+      console.error(t('submissionError'), error);
+      alert(t('submissionError'));
     }
   };
 
@@ -107,7 +97,7 @@ const SurveyFormPage: React.FC = () => {
           <input
             type="text"
             className="w-full rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white dark:focus:ring-primary-600"
-            placeholder="Your answer"
+            placeholder={t('responsePlaceholder')}
             value={responses[question._id] || ''}
             onChange={(e) => handleResponseChange(question._id, e.target.value)}
           />
@@ -133,7 +123,7 @@ const SurveyFormPage: React.FC = () => {
               type="checkbox"
               name={question._id}
               value={option}
-              checked={responses[question._id]?.includes(option)}
+              checked={(responses[question._id] as string[]).includes(option)}
               onChange={() => {
                 const newValue = responses[question._id] || [];
                 if (Array.isArray(newValue)) {
@@ -144,7 +134,6 @@ const SurveyFormPage: React.FC = () => {
                   }
                 }
               }}
-              
               className="form-checkbox text-primary-600 focus:ring-primary-500 dark:text-primary-400 dark:focus:ring-primary-600"
             />
             <span className="text-gray-700 dark:text-gray-300">{option}</span>
@@ -157,7 +146,7 @@ const SurveyFormPage: React.FC = () => {
             value={responses[question._id] || ''}
             onChange={(e) => handleResponseChange(question._id, e.target.value)}
           >
-            <option value="">Select an option</option>
+            <option value="">{t('selectOption')}</option>
             {question.options?.map((option) => (
               <option key={option} value={option}>
                 {option}
@@ -170,14 +159,14 @@ const SurveyFormPage: React.FC = () => {
     }
   };
 
-  if (!survey) return <p className="text-center text-gray-500 dark:text-gray-400">Loading...</p>;
+  if (!survey) return <p className="text-center text-gray-500 dark:text-gray-400">{t('loading')}</p>;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-6">
       <div className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 space-y-6">
         {isSubmitted ? (
           <div className="text-center">
-            <h1 className="text-3xl font-semibold text-gray-800 dark:text-white">Thank you for your response!</h1>
+            <h1 className="text-3xl font-semibold text-gray-800 dark:text-white">{t('thankYou')}</h1>
           </div>
         ) : (
           <>
@@ -197,7 +186,7 @@ const SurveyFormPage: React.FC = () => {
                   type="submit"
                   className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                 >
-                  Submit
+                  {t('submit')}
                 </button>
               </div>
             </form>

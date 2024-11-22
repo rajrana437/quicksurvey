@@ -3,7 +3,15 @@
     "title": "Formulaire d'enquête",
     "submit": "Soumettre",
     "thankYou": "Merci pour votre réponse!",
-    "selectOption": "Sélectionner une option"
+    "selectOption": "Sélectionner une option",
+    "loading": "Chargement...",
+    "responsePlaceholder": "Votre réponse",
+    "checkboxOption": "Option de case à cocher",
+    "radioOption": "Option radio",
+    "dropdownOption": "Option déroulante",
+    "reset": "Réinitialiser les réponses",
+    "submissionSuccess": "Enquête soumise avec succès!",
+    "submissionError": "Erreur lors de la soumission de l'enquête. Veuillez réessayer."
   },
   "CreateSurvey": {
     "titles": {

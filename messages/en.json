@@ -3,7 +3,15 @@
     "title": "Survey Form",
     "submit": "Submit",
     "thankYou": "Thank you for your response!",
-    "selectOption": "Select an option"
+    "selectOption": "Select an option",
+    "loading": "Loading...",
+    "responsePlaceholder": "Your answer",
+    "checkboxOption": "Checkbox Option",
+    "radioOption": "Radio Option",
+    "dropdownOption": "Dropdown Option",
+    "reset": "Reset Responses",
+    "submissionSuccess": "Survey submitted successfully!",
+    "submissionError": "Error submitting the survey. Please try again."
   },
   "CreateSurvey": {
     "titles": {
