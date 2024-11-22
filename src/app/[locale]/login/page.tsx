@@ -68,11 +68,12 @@ export default function LoginPage() {
               <FormField
                 id="username"
                 label={t("username")}
-                type="username"
+                type="text"
                 placeholder={t("username")}
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 required
+                icon="user"
               />
               <FormField
                 id="password"
@@ -82,8 +83,9 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-              />
-              <div className="flex items-center justify-between">
+                icon="password"
+              /> 
+              {/* <div className="flex items-center justify-between">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
@@ -107,7 +109,7 @@ export default function LoginPage() {
                 >
                   {t("forgotPassword")}
                 </a>
-              </div>
+              </div> */}
               <button
                 type="submit"
                 disabled={loading}

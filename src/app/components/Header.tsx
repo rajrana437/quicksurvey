@@ -22,7 +22,7 @@ export default function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="flex justify-between items-center p-6 bg-white shadow-md">
+    <header className="flex justify-between items-center p-6 bg-[#F3F3F3] shadow-md">
       <div className="flex items-center">
         <Image
           className="w-8 h-8 mr-2"
@@ -31,14 +31,17 @@ export default function Header() {
           width={100}
           height={100}
         />
-        <h1 className="text-2xl font-bold text-gray-800 hover:text-blue-600 transition-colors">
+        <h1
+          className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition-colors"
+          style={{ fontFamily: "'Poppins', sans-serif" }}
+        >
           QuickSurvey
         </h1>
       </div>
       <div className="relative">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center px-4 py-2 bg-gray-100 text-gray-800 font-medium rounded-md shadow-sm hover:bg-gray-200 transition-colors"
+          className="flex items-center px-4 py-2 bg-white text-[#6A0DAD] font-medium rounded-md shadow-sm border border-gray-300 hover:bg-[#EDE7F6] hover:border-gray-400 transition-colors"
         >
           {currentLang === "en" ? "English" : "Français"}
           <svg
@@ -64,8 +67,8 @@ export default function Header() {
               <li>
                 <button
                   onClick={() => handleLanguageChange("en")}
-                  className={`block w-full text-left px-4 py-2 hover:bg-blue-600 hover:text-white ${
-                    currentLang === "en" ? "bg-blue-100 text-blue-600" : "text-gray-800"
+                  className={`block w-full text-left px-4 py-2 hover:bg-[#6A0DAD] hover:text-white ${
+                    currentLang === "en" ? "bg-purple-100 text-[#6A0DAD]" : "text-gray-800"
                   }`}
                 >
                   English
@@ -74,8 +77,8 @@ export default function Header() {
               <li>
                 <button
                   onClick={() => handleLanguageChange("fr")}
-                  className={`block w-full text-left px-4 py-2 hover:bg-blue-600 hover:text-white ${
-                    currentLang === "fr" ? "bg-blue-100 text-blue-600" : "text-gray-800"
+                  className={`block w-full text-left px-4 py-2 hover:bg-[#6A0DAD] hover:text-white ${
+                    currentLang === "fr" ? "bg-purple-100 text-[#6A0DAD]" : "text-gray-800"
                   }`}
                 >
                   Français

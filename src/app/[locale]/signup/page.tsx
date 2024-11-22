@@ -83,37 +83,38 @@ export default function SignUpPage() {
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
               <FormField
-                label={t("username")}
                 id="username"
+                label={t("username")}
                 type="text"
+                placeholder={t("username")}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder={t("username")}
                 required
-                error={errors.username}
+                icon="user"
               />
               <FormField
-                label={t("email")}
                 id="email"
+                label={t("email")}
                 type="email"
+                placeholder={t("email")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={t("email")}
                 required
-                error={errors.email}
+                icon="email"
               />
               <FormField
-                label={t("password")}
                 id="password"
+                label={t("password")}
                 type="password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
                 required
-                error={errors.password}
+                icon="password"
               />
+
               {errors.api && <p className="text-red-500 text-sm">{errors.api}</p>}
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
@@ -128,7 +129,7 @@ export default function SignUpPage() {
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <button
                 type="submit"
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
