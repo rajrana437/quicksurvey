@@ -8,7 +8,6 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Default to 'en' if pathname is null or undefined
   const currentLang = pathname ? pathname.split("/")[1] : "en";
 
   const handleLanguageChange = (lang: string) => {
@@ -16,32 +15,32 @@ export default function Header() {
       const newPath = pathname.replace(`/${currentLang}`, `/${lang}`);
       router.push(newPath);
     }
-    setDropdownOpen(false); // Close dropdown after selection
+    setDropdownOpen(false);
   };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="flex justify-between items-center p-6 bg-[#F3F3F3] shadow-md">
+    <header className="flex justify-between items-center p-6 bg-gradient-to-b from-gray-900 to-gray-800 shadow-lg rounded-b-md">
       <div className="flex items-center">
         <Image
-          className="w-8 h-8 mr-2"
+          className="w-8 h-8 mr-3"
           src="/logo.png"
           alt="logo"
           width={100}
           height={100}
         />
         <h1
-          className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 transition-colors"
+          className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400 hover:from-purple-500 hover:to-blue-500 transition-colors"
           style={{ fontFamily: "'Poppins', sans-serif" }}
         >
-          QuickSurvey
+          Quick Survey
         </h1>
       </div>
       <div className="relative">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center px-4 py-2 bg-white text-[#6A0DAD] font-medium rounded-md shadow-sm border border-gray-300 hover:bg-[#EDE7F6] hover:border-gray-400 transition-colors"
+          className="flex items-center px-4 py-2 bg-gray-700 text-gray-200 font-medium rounded-lg shadow-md border border-gray-600 hover:bg-gray-600 hover:border-gray-500 transition-all"
         >
           {currentLang === "en" ? "English" : "Français"}
           <svg
@@ -62,13 +61,13 @@ export default function Header() {
           </svg>
         </button>
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+          <div className="absolute right-0 mt-2 w-40 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-10">
             <ul>
               <li>
                 <button
                   onClick={() => handleLanguageChange("en")}
-                  className={`block w-full text-left px-4 py-2 hover:bg-[#6A0DAD] hover:text-white ${
-                    currentLang === "en" ? "bg-purple-100 text-[#6A0DAD]" : "text-gray-800"
+                  className={`block w-full text-left px-4 py-2 hover:bg-purple-600 hover:text-white rounded-lg transition-all ${
+                    currentLang === "en" ? "bg-gray-700 text-purple-400" : "text-gray-300"
                   }`}
                 >
                   English
@@ -77,8 +76,8 @@ export default function Header() {
               <li>
                 <button
                   onClick={() => handleLanguageChange("fr")}
-                  className={`block w-full text-left px-4 py-2 hover:bg-[#6A0DAD] hover:text-white ${
-                    currentLang === "fr" ? "bg-purple-100 text-[#6A0DAD]" : "text-gray-800"
+                  className={`block w-full text-left px-4 py-2 hover:bg-purple-600 hover:text-white rounded-lg transition-all ${
+                    currentLang === "fr" ? "bg-gray-700 text-purple-400" : "text-gray-300"
                   }`}
                 >
                   Français
